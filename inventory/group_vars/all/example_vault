@@ -1,0 +1,10 @@
+# these variables should be in your vault encrypted file:
+
+vault_sealer_password: yoursecret
+vault_keystore_password: yoursecret
+# LDAP host with port appended
+vault_ldap_host: ldap://ldap.example.org:389
+vault_ldap_basedn: ou=my,dc=ldap,dc=example,dc=org
+vault_ldap_binddn: uid=mybinduser,ou=bla,dc=bla,dc=example,dc=org
+vault_ldap_bindpw: yoursecret
+vault_persistent_id_salt: yoursecret

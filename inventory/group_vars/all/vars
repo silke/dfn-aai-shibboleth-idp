@@ -1,0 +1,68 @@
+# These are IdP variables both for test and production IdPs:
+
+shibboleth_idp_version: 4.1.0
+
+### self-signed SAML certificate ###
+selfsigned_not_after: "+1095d"
+openssl_org_name: "Your home institution's name"
+openssl_org_unit: "Your department for certificate"
+openssl_email_address: "Mail address for certificate"
+
+institution_website: "https://example.org"
+copyright_year: "2021"
+url_helpdesk: "https://example.org"
+url_imprint: "https://example.org/imprint"
+url_privacy: "https://example.org/privacy"
+metadata_contacts:
+  - name: administrative
+    givenName: ""
+    surName: ""
+    eMail: ""
+  - name: technical
+    givenName: ""
+    surName: ""
+    eMail: ""
+  - name: support
+    givenName: ""
+    surName: ""
+    eMail: ""
+  - name: security
+    givenName: ""
+    surName: ""
+    eMail: ""
+scope: "example.org"
+sealer_password: "{{ vault_sealer_password }}"
+keystore_password: "{{ vault_keystore_password }}"
+
+### IdM - change according to your needs ###
+ldap_authenticator: bindSearchAuthenticator
+ldap_host: "{{ vault_ldap_host }}"
+ldap_trusted_certificate: "/etc/ssl/certs/T-TeleSec_GlobalRoot_Class_2.pem"
+ldap_use_starttls: true
+ldap_basedn: "{{ vault_ldap_basedn }}"
+ldap_subtreeSearch: true
+ldap_userfilter: "(uid={user})"
+ldap_binddn: "{{ vault_ldap_binddn }}"
+ldap_bindpw: "{{ vault_ldap_bindpw }}"
+ldap_search_filter: (uid=$resolutionContext.principal)
+
+### persistentID - change according to your needs ###
+persistent_id_source_attr: "uid"
+persistent_id_salt: "{{ vault_persistent_id_salt }}"
+
+### use DFN metadata query service? ###
+metadata_mdq: true
+
+### metadata to subscribe to ###
+metadata_test: true
+metadata_dfnaai: true
+metadata_edugain: true
+# file name of your local metadata, format: dfn-aai-local-999-metadata.xml
+metadata_local: "dfn-aai-local-999-metadata.xml"
+
+loglevel: "DEBUG"
+
+### access to IdP status page, format: 127.0.0.1/32 ###
+statuspage_ipv4: ""
+### access to IdP status page, format: ::1/128
+statuspage_ipv6: ""
