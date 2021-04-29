@@ -1,0 +1,47 @@
+#jinja2: lstrip_blocks: "True"
+# {{ ansible_managed }}
+
+<VirtualHost {{ idp_ipv4 }}:443 {{ idp_ipv6 }}:443>
+    ServerName {{ idp_fqdn }}
+    RedirectMatch permanent ^/$ https://{{ idp_fqdn }}/idp/
+
+    SSLEngine On
+    <IfModule mod_headers.c>
+        Header always set Strict-Transport-Security "max-age=63072000"
+    </IfModule>
+
+    SSLCertificateFile      /etc/ssl/localcerts/{{ idp_fqdn }}.crt.pem
+    SSLCertificateKeyFile   /etc/ssl/private/{{ idp_fqdn }}.key.pem
+
+    <Location /idp>
+        Require all granted
+        ProxyPass ajp://localhost:8009/idp
+        Header always append X-FRAME-OPTIONS "SAMEORIGIN"
+    </Location>
+</VirtualHost>
+
+################################################
+
+# ArtifactResolutionService und AttributeService auf Port 8443
+
+<VirtualHost {{ idp_ipv4 }}:8443 {{ idp_ipv6 }}:8443>
+    ServerName              {{ idp_fqdn }}
+    # Backchannel options
+    SSLVerifyClient       optional_no_ca
+    SSLVerifyDepth        10
+    SSLOptions            +StdEnvVars +ExportCertData
+    SSLEngine On
+    <IfModule mod_headers.c>
+        Header always set Strict-Transport-Security "max-age=63072000"
+    </IfModule>
+
+    SSLCertificateFile      /etc/ssl/localcerts/{{ idp_fqdn }}.crt.pem
+    SSLCertificateKeyFile   /etc/ssl/private/{{ idp_fqdn }}.key.pem
+
+    <Location /idp>
+        Require all granted
+        ProxyPass ajp://localhost:8009/idp
+        Header always append X-FRAME-OPTIONS "SAMEORIGIN"
+    </Location>
+</VirtualHost>
+

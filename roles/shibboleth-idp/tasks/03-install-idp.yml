@@ -1,0 +1,73 @@
+- name: install Tomcat MariaDB library
+  apt:
+    name: libmariadb-java
+    state: present
+
+- name: create directory for shibboleth downloads
+  file:
+    path: /opt/install
+    state: directory
+
+# Download the Shibboleth version number given in group_vars/idphosts/vars
+- name: download the latest shibboleth-idp
+  get_url:
+    url: "{{ item }}"
+    dest: /opt/install
+    force: no
+  loop:
+    - "https://shibboleth.net/downloads/identity-provider/{{ shibboleth_idp_version }}/shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz"
+    - "https://shibboleth.net/downloads/identity-provider/{{ shibboleth_idp_version }}/shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz.asc"
+    - "https://shibboleth.net/downloads/PGP_KEYS"
+
+- name: import the PGP key
+  command: gpg --import PGP_KEYS
+  args:
+    chdir: /opt/install
+
+- name: verify the download
+  command: gpg --verify shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz.asc shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz
+  args:
+    chdir: /opt/install
+  register: verified_download
+
+- name: extract the archive if verified
+  unarchive:
+    src: "/opt/install/shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz"
+    dest: /opt/install
+    remote_src: yes
+  when: verified_download is succeeded
+
+- name: merge.properties file for non-interactive installation
+  template:
+    src: templates/opt/shibboleth-idp/idp.merge.properties.j2
+    dest: "/opt/shibboleth-idp/idp.merge.properties"
+
+- name: run the shibboleth installer
+  shell: "JAVA_HOME=/usr /opt/install/shibboleth-identity-provider-{{ shibboleth_idp_version }}/bin/install.sh -Didp.src.dir=/opt/install/shibboleth-identity-provider-{{ shibboleth_idp_version }} -Didp.target.dir=/opt/shibboleth-idp -Didp.host.name={{ idp_fqdn }} -Didp.scope={{ scope }} -Didp.keystore.password={{ keystore_password }} -Didp.sealer.password={{ sealer_password }} -Didp.merge.properties=/opt/shibboleth-idp/idp.merge.properties >> /opt/shibboleth-idp/.ansible_initial_installation_successful.log"
+  # Create a hidden file to be idempotent.
+  # To force a reinstallation remove this file, too.
+  args:
+    creates: "/opt/shibboleth-idp/.ansible_initial_installation_successful.log"
+
+- name: fix read permissions for tomcat group on conf and credentials
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: tomcat
+    mode: 0755
+    recurse: yes
+  loop:
+    - /opt/shibboleth-idp/conf
+    - /opt/shibboleth-idp/credentials
+
+- name: fix ownership for tomcat user on metadata and logs
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: tomcat
+    group: tomcat
+    recurse: yes
+  loop:
+    - /opt/shibboleth-idp/logs
+    - /opt/shibboleth-idp/metadata

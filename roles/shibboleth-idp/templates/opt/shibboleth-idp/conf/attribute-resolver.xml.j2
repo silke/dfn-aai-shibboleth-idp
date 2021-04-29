@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- {{ ansible_managed }} -->
+<AttributeResolver
+        xmlns="urn:mace:shibboleth:2.0:resolver"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:mace:shibboleth:2.0:resolver http://shibboleth.net/schema/idp/shibboleth-attribute-resolver.xsd">
+
+    <!-- ========================================== -->
+    <!--      Attribute Definitions                 -->
+    <!-- ========================================== -->
+
+    <!-- Attribute aus Userangaben -->
+
+    <AttributeDefinition id="uid" xsi:type="PrincipalName">
+    </AttributeDefinition>
+    
+    <AttributeDefinition id="eduPersonPrincipalName" xsi:type="Scoped" scope="%{idp.scope}">
+        <InputAttributeDefinition ref="uid" />
+    </AttributeDefinition>
+
+    <!--- Attribute aus dem IdM -->
+
+    <!-- Die Attribute mail, givenName, displayName und ou werden in diesem Beispiel nicht extra definiert: Es wird davon ausgegangen, dass sie im IdM denselben Identifier haben wie in der Attribute Registry des IdP (conf/attributes/*.xml). Siehe unten im DataConnector "exportAttributes" -->
+
+    <AttributeDefinition id="sn" xsi:type="Simple">
+        <InputDataConnector ref="myLDAP" attributeNames="surname"/>
+    </AttributeDefinition>
+
+    <AttributeDefinition id="givenName" xsi:type="Simple">
+        <InputDataConnector ref="myLDAP" attributeNames="givenName"/>
+    </AttributeDefinition>
+
+    <!-- Definieren Sie Ihre weiteren Attribute... -->
+    <!--
+    <AttributeDefinition xsi:type="Simple" id="eduPersonAffiliation">
+        <InputDataConnector ref="myLDAP" attributeNames="eduPersonAffiliation"/>
+    </AttributeDefinition>
+    -->
+    <AttributeDefinition xsi:type="Scoped" id="eduPersonScopedAffiliation" scope="%{idp.scope}">
+        <InputDataConnector ref="myLDAP" attributeNames="eduPersonAffiliation"/>
+    </AttributeDefinition>
+
+    <!-- Hash generieren für SAML Subject ID -->
+    <AttributeDefinition id="subjectHash" xsi:type="ScriptedAttribute" dependencyOnly="true">
+        <InputDataConnector ref="myLDAP" attributeNames="%{idp.persistentId.sourceAttribute}" />
+        <Script><![CDATA[
+          var digestUtils = Java.type("org.apache.commons.codec.digest.DigestUtils");
+          var saltedHash  = digestUtils.sha256Hex(%{idp.persistentId.sourceAttribute}.getValues().get(0) + "%{idp.persistentId.salt}");
+          subjectHash.addValue(saltedHash);
+        ]]></Script>
+    </AttributeDefinition>
+
+    <!-- Für samlSubjectID und eduPersonUniqueId wird der gleiche Wert übertragen -->
+    <AttributeDefinition xsi:type="Scoped" id="samlSubjectID" scope="%{idp.scope}">
+        <InputAttributeDefinition ref="subjectHash" />
+    </AttributeDefinition>
+
+    <AttributeDefinition xsi:type="Scoped" id="eduPersonUniqueId" scope="%{idp.scope}">
+        <InputAttributeDefinition ref="subjectHash" />
+    </AttributeDefinition>
+
+    <!-- Für samlPairwiseID wird die persistentId mit Scope übertragen -->
+    <AttributeDefinition xsi:type="Scoped" id="samlPairwiseID" scope="%{idp.scope}">
+        <InputDataConnector ref="StoredId" attributeNames="persistentID"/>
+    </AttributeDefinition>
+
+    <!-- veraltete eduPersonTargetedID -->
+    <AttributeDefinition id="eduPersonTargetedID" xsi:type="SAML2NameID" nameIdFormat="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent">
+        <InputDataConnector ref="StoredId" attributeNames="persistentId"/>
+    </AttributeDefinition>
+
+
+    <!-- ========================================== -->
+    <!--      Data Connectors                       -->
+    <!-- ========================================== -->
+
+    <!-- Wenn ein Attribut im IdM denselben Identifier hat wie in der Attribute Registry des IdP (conf/attributes/*.xml), kann es direkt exportiert werden, s.u. "exportAttributes", ohne AttributeDefinition im oberen Teil dieser Datei. -->
+
+    <DataConnector id="myLDAP" xsi:type="LDAPDirectory"
+        ldapURL="%{idp.attribute.resolver.LDAP.ldapURL}"
+        baseDN="%{idp.attribute.resolver.LDAP.baseDN}"
+        principal="%{idp.attribute.resolver.LDAP.bindDN}"
+        principalCredential="%{idp.attribute.resolver.LDAP.bindDNCredential}"
+        useStartTLS="%{idp.attribute.resolver.LDAP.useStartTLS:true}"
+        connectTimeout="%{idp.attribute.resolver.LDAP.connectTimeout}"
+        trustFile="%{idp.attribute.resolver.LDAP.trustCertificates}"
+        responseTimeout="%{idp.attribute.resolver.LDAP.responseTimeout}"
+        failFastInitialize="%{idp.pool.LDAP.failFastInitialize:false}"
+        exportAttributes="mail givenName displayName ou">
+        <ReturnAttributes>* +</ReturnAttributes>
+        <FilterTemplate>
+            <![CDATA[
+                %{idp.attribute.resolver.LDAP.searchFilter}
+            ]]>
+        </FilterTemplate>
+        <ConnectionPool
+            minPoolSize="%{idp.pool.LDAP.minSize:3}"
+            maxPoolSize="%{idp.pool.LDAP.maxSize:10}"
+            blockWaitTime="%{idp.pool.LDAP.blockWaitTime:PT3S}"
+            validatePeriodically="%{idp.pool.LDAP.validatePeriodically:true}"
+            validateTimerPeriod="%{idp.pool.LDAP.validatePeriod:PT5M}"
+            expirationTime="%{idp.pool.LDAP.idleTime:PT10M}" />
+    </DataConnector>
+
+    <DataConnector id="staticAttributes" xsi:type="Static">
+        <Attribute id="o">
+            <Value>Beispiel-Hochschule</Value>
+        </Attribute>
+    </DataConnector>
+
+    <DataConnector id="StoredId"
+        xsi:type="StoredId"
+        generatedAttributeID="persistentID"
+        salt="%{idp.persistentId.salt}"
+        queryTimeout="0">
+        <InputAttributeDefinition ref="%{idp.persistentId.sourceAttribute}"/>
+        <BeanManagedConnection>shibboleth.MySQLDataSource</BeanManagedConnection>
+    </DataConnector>
+
+</AttributeResolver>

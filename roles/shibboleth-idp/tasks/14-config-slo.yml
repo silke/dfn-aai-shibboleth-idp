@@ -1,0 +1,20 @@
+---
+- name: track sp sessions
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.session.trackSPSessions"
+    line: idp.session.trackSPSessions = true
+
+- name: support lookup by SP
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.session.secondaryServiceIndex"
+    line: idp.session.secondaryServiceIndex = true
+
+- name: logout feedback for users
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.logout.elaboration"
+    line: idp.logout.elaboration = true
+
+  

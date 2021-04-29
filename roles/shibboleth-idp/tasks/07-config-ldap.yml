@@ -1,0 +1,11 @@
+---
+- name: configure ldap.properties
+  template:
+    src: templates/opt/shibboleth-idp/conf/ldap.properties.j2
+    dest: /opt/shibboleth-idp/conf/ldap.properties
+
+- name: configure LDAP password
+  lineinfile:
+    path: /opt/shibboleth-idp/credentials/secrets.properties
+    regexp: "^idp.authn.LDAP.bindDNCredential"
+    line: "idp.authn.LDAP.bindDNCredential = {{ ldap_bindpw }}"

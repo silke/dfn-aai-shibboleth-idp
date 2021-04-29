@@ -1,0 +1,118 @@
+- name: install mariadb
+  apt:
+    name: ['mariadb-server', 'mariadb-client', 'libmariadb-java', 'python3-pymysql']
+    state: present
+
+- name: create symlink for tomcat
+  file:
+    src: /usr/share/java/mariadb-java-client.jar
+    dest: /var/lib/tomcat9/lib/mariadb-java-client.jar
+    state: link
+  notify: restart tomcat
+
+- name: make sure mariadb is running
+  service:
+    name: mariadb
+    state: started
+
+- name: create a database for shibboleth-idp
+  community.mysql.mysql_db:
+    name: "{{ database_name }}"
+    state: present
+    encoding: utf8
+    check_implicit_admin: yes
+    # connect via network or socket depending on your needs
+    # login_host: "{{ database_host }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: "{{ database_admin }}"
+    login_password: "{{ database_admin_password }}"
+
+- name: create a database user for shibboleth-idp
+  mysql_user:
+    name: "{{ database_user }}"
+    state: present
+    password: "{{ database_password }}"
+    priv: "{{ database_name }}.*:ALL"
+    check_implicit_admin: yes
+    # connect via network or socket depending on your needs
+    # login_host: "{{ database_host }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_host: "{{ database_host }}"
+    login_user: "{{ database_admin }}"
+    login_password: "{{ database_admin_password }}"
+
+- name: get mysqldumps for two database tables
+  copy:
+    src: "{{ item }}"
+    dest: /tmp
+  with_fileglob:
+    - "files/*.sql"
+
+- name: import both tables to database
+  mysql_db:
+    name: "{{ database_name }}"
+    state: import
+    target: "{{ item }}"
+    # connect via network or socket depending on your needs
+    # login_host: "{{ database_host }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: "{{ database_admin }}"
+    login_password: "{{ database_admin_password }}"
+  loop:
+    - /tmp/table-shibpid.sql
+    - /tmp/table-storage-records.sql
+  # import is not idempotent and thus may fail
+  ignore_errors: true
+
+- name: configure database access via JPAStorageService
+  blockinfile:
+    path: /opt/shibboleth-idp/conf/global.xml
+    block: |
+      <bean id="shibboleth.MySQLDataSource"
+          class="%{mysql.class}"
+          p:driverClassName="org.mariadb.jdbc.Driver"
+          p:url="%{mysql.url}"
+          p:username="%{mysql.username}"
+          p:password="%{mysql.password}"
+          p:maxWait="15000"
+          p:testOnBorrow="true"
+          p:maxActive="100"
+          p:maxIdle="100"
+          p:validationQuery="select 1"
+          p:validationQueryTimeout="5" />
+      <bean id="shibboleth.JPAStorageService"
+          class="org.opensaml.storage.impl.JPAStorageService"
+          p:cleanupInterval="%{idp.storage.cleanupInterval:PT10M}"
+          c:factory-ref="shibboleth.JPAStorageService.EntityManagerFactory" />
+      <bean id="shibboleth.JPAStorageService.EntityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+          <property name="packagesToScan" value="org.opensaml.storage.impl"/>
+          <property name="dataSource" ref="shibboleth.MySQLDataSource"/>
+          <property name="jpaVendorAdapter" ref="shibboleth.JPAStorageService.JPAVendorAdapter"/>
+          <property name="jpaDialect">
+              <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+          </property>
+      </bean>
+      <bean id="shibboleth.JPAStorageService.JPAVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+          p:generateDdl="true"
+          p:database="MYSQL"
+          p:databasePlatform="org.hibernate.dialect.MySQL5Dialect" />
+    insertbefore: </beans>
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+  notify: restart tomcat
+
+- name: add database credentials to idp.properties
+  blockinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    block: |
+      mysql.class    = org.apache.tomcat.jdbc.pool.DataSource
+      mysql.url      = jdbc:mysql://{{ database_host }}:3306/{{ database_name}}
+      mysql.username = {{ database_user }}
+    insertbefore: EOF
+
+- name: add database password to secrets.properties
+  lineinfile:
+    path: /opt/shibboleth-idp/credentials/secrets.properties
+    regexp: "^mysql.password"
+    line: mysql.password = {{ database_password }}

@@ -1,0 +1,45 @@
+---
+- import_tasks: 01-config-vhost.yml
+  tags: config-vhost
+
+- import_tasks: 02-saml-certificate.yml
+  tags: saml-certificate
+  
+- import_tasks: 03-install-idp.yml
+  tags: install-idp
+
+- import_tasks: 04-config-access.yml
+  tags: config-access
+
+- import_tasks: 05-config-federation-metadata.yml
+  tags: config-federation-metadata
+
+- import_tasks: 06-config-logging.yml
+  tags: config-logging
+
+- import_tasks: 07-config-ldap.yml
+  tags: config-ldap
+
+- import_tasks: 08-config-i18n.yml
+  tags: config-i18n
+
+- import_tasks: 09-config-tou-consent.yml
+  tags: config-tou-consent
+
+- import_tasks: 10-config-database.yml
+  tags: config-database
+
+- import_tasks: 11-config-attributes.yml
+  tags: config-attributes
+
+- import_tasks: 12-config-pid.yml
+  tags: config-pid
+
+- import_tasks: 13-config-sessions-consent.yml
+  tags: config-sessions-consent
+
+- import_tasks: 14-config-slo.yml
+  tags: config-slo
+
+- import_tasks: 15-config-logo.yml
+  tags: config-logo

@@ -1,0 +1,119 @@
+#jinja2: lstrip_blocks: "True"
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- {{ ansible_managed }} -->
+
+<!--
+     This is example metadata only. Do *NOT* supply it as is without review,
+     and do *NOT* provide it in real time to your partners.
+
+     This metadata is not dynamic - it will not change as your configuration changes.
+-->
+<EntityDescriptor  xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:req-attr="urn:oasis:names:tc:SAML:protocol:ext:req-attr" xmlns:remd="http://refeds.org/metadata" entityID="https://{{ idp_fqdn }}/idp/shibboleth">
+
+    <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+
+        <Extensions>
+            <shibmd:Scope regexp="false">{{ scope }}</shibmd:Scope>
+            <mdui:UIInfo>
+                <mdui:DisplayName xml:lang="en">{{ institution_name_en }}</mdui:DisplayName>
+                <mdui:DisplayName xml:lang="de">{{ institution_name_de }}</mdui:DisplayName>
+                <mdui:Description xml:lang="en">{{ institution_desc_en }}</mdui:Description>
+                <mdui:Description xml:lang="de">{{ institution_desc_de }}</mdui:Description>
+                <mdui:Logo height="16" width="16">https://{{ idp_fqdn }}/idp/images/favicon.ico</mdui:Logo>
+                <mdui:Logo height="80" width="80">https://{{ idp_fqdn }}/idp/images/logo.png</mdui:Logo>
+                <mdui:InformationURL xml:lang="de">{{ institution_website }}</mdui:InformationURL>
+                <mdui:InformationURL xml:lang="en">{{ institution_website }}</mdui:InformationURL>
+                <mdui:PrivacyStatementURL xml:lang="de">{{ url_privacy }}</mdui:PrivacyStatementURL>
+            </mdui:UIInfo>
+        </Extensions>
+
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        {{ samlcert.content | b64decode }}
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+
+        <KeyDescriptor use="encryption">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        {{ samlcert.content | b64decode }}
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://{{ idp_fqdn }}:8443/idp/profile/SAML2/SOAP/ArtifactResolution" index="2"/>
+
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://{{ idp_fqdn }}/idp/profile/SAML2/Redirect/SLO"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://{{ idp_fqdn }}/idp/profile/SAML2/POST/SLO"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://{{ idp_fqdn }}/idp/profile/SAML2/POST-SimpleSign/SLO"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://{{ idp_fqdn }}:8443/idp/profile/SAML2/SOAP/SLO"/>
+
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://{{ idp_fqdn }}/idp/profile/SAML2/POST/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://{{ idp_fqdn }}/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://{{ idp_fqdn }}/idp/profile/SAML2/Redirect/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://{{ idp_fqdn }}/idp/profile/SAML2/SOAP/ECP"/>
+
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+
+    </IDPSSODescriptor>
+
+    <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+
+        <Extensions>
+            <shibmd:Scope regexp="false">{{ scope }}</shibmd:Scope>
+        </Extensions>
+
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        {{ samlcert.content | b64decode }}
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+
+        <KeyDescriptor use="encryption">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        {{ samlcert.content | b64decode }}
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+
+        <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP-binding" Location="https://{{ idp_fqdn }}:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
+
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+
+    </AttributeAuthorityDescriptor>
+    
+
+    {% for item in metadata_contacts %}
+    {% if item.name != "security" %}
+    <ContactPerson contactType="{{ item.name }}">
+      <GivenName>{{ item.givenName }}</GivenName>
+      <SurName>{{ item.surName }}</SurName>
+      <EmailAddress>{{ item.eMail }}</EmailAddress>
+    </ContactPerson>
+    {% endif %}
+    {% if item.name == "security" %}
+    <ContactPerson contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+      <GivenName>{{ item.givenName }}</GivenName>
+      <SurName>{{ item.surName }}</SurName>
+      <EmailAddress>{{ item.eMail }}</EmailAddress>
+    </ContactPerson>    
+    {% endif %}
+    {% endfor %}
+
+</EntityDescriptor>

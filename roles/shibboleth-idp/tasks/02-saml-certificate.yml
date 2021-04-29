@@ -1,0 +1,52 @@
+---
+# Generate a selfsigned OpenSSL certificate for SAML communication
+
+- name: make sure openssl and python-cryptography are installed
+  apt:
+    name: ['openssl', 'python3-cryptography']
+    state: present
+
+- name: register the current UTC timestamp for cert validity
+  command: date -u '+%Y%m%d%H%M%SZ'
+  register: current_date
+
+- name: ensure that the directories for ssl certs are present
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+    - /etc/ssl/aai
+    - /etc/ssl/csr
+    - /etc/ssl/localcerts
+
+- name: generate private key for self-signed SAML certificate
+  community.crypto.openssl_privatekey:
+    path: "/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
+    owner: root
+    group: ssl-cert
+    mode: 0640
+    backup: yes
+
+# force regeneration with force: yes
+- name: generate certificate signing request
+  community.crypto.openssl_csr:
+    path: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"
+    privatekey_path: "/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
+    country_name: DE
+    organization_name: "{{ openssl_org_name }}"
+    organizational_unit_name: "{{ openssl_org_unit }}"
+    email_address: "{{ openssl_email_address }}"
+    common_name: "{{ idp_fqdn }}"
+    backup: yes
+
+- name: sign the csr
+  community.crypto.x509_certificate:
+    path: "/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
+    privatekey_path: "/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
+    csr_path: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"
+    selfsigned_not_before: "{{ current_date.stdout }}"
+    selfsigned_not_after: "{{ selfsigned_not_after}}"
+    provider: selfsigned

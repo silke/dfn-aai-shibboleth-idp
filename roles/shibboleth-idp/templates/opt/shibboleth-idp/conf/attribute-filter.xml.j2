@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- {{ ansible_managed }} -->
+<AttributeFilterPolicyGroup id="ShibbolethFilterPolicy"
+        xmlns="urn:mace:shibboleth:2.0:afp"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:mace:shibboleth:2.0:afp http://shibboleth.net/schema/idp/shibboleth-afp.xsd">
+
+   <!-- Attribute an die DFN-Test-SPs freigeben -->
+   <AttributeFilterPolicy id="dfn_test_sps">
+        <PolicyRequirementRule xsi:type="OR">
+            <!-- Als Requester wird die jeweilige EntityID des Service Providers angegeben. -->
+            <Rule xsi:type="Requester" value="https://testsp2.aai.dfn.de/shibboleth" />
+            <Rule xsi:type="Requester" value="https://testsp3.aai.dfn.de/shibboleth" />
+        </PolicyRequirementRule>
+        <!-- Liste der Attribute, die an den/die Requester übermittelt werden dürfen. -->
+        <AttributeRule attributeID="uid"                    permitAny="true"/>
+        <AttributeRule attributeID="eduPersonPrincipalName" permitAny="true"/>
+        <AttributeRule attributeID="mail"                   permitAny="true"/>
+        <AttributeRule attributeID="sn"                     permitAny="true"/>
+        <AttributeRule attributeID="givenName"              permitAny="true"/>
+  </AttributeFilterPolicy>
+
+    <!-- Anonyme Angaben an alle SPs freigeben -->
+    <AttributeFilterPolicy id="LibraryTermsToAnyone">
+        <PolicyRequirementRule xsi:type="ANY" />
+ 
+      <AttributeRule attributeID="eduPersonEntitlement">
+        <PermitValueRule xsi:type="Value" value="urn:mace:dir:entitlement:common-lib-terms"/>
+      </AttributeRule>
+ 
+      <AttributeRule attributeID="eduPersonScopedAffiliation">
+        <PermitValueRule xsi:type="OR">
+            <Rule xsi:type="Value" value="member"          caseSensitive="false" />
+            <Rule xsi:type="Value" value="library-walk-in" caseSensitive="false" />
+        </PermitValueRule>
+      </AttributeRule>
+    </AttributeFilterPolicy>
+
+</AttributeFilterPolicyGroup>

@@ -1,0 +1,35 @@
+---
+### metadata/idp-metadata.xml ###
+- name: link self signed certificate in idp.properties
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  loop:
+    - { regexp: "^idp.signing.key", line: "idp.signing.key=/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem" }
+    - { regexp: "^idp.signing.cert", line: "idp.signing.cert=/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem" }
+    - { regexp: "^idp.encryption.key", line: "idp.encryption.key=/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem" }
+    - { regexp: "^idp.encryption.cert", line: "idp.encryption.cert=/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem" }
+
+- name: register the selfsigned certificate of the IdP
+  slurp:
+    src: "/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
+  register: samlcert
+
+# manipulated and hopefully complete idp-metadata.xml
+- name: fill in initial idp-metadata.xml for DFN-AAI metadata administration tool
+  template:
+    src: templates/opt/shibboleth-idp/metadata/idp-metadata.xml.j2
+    dest: /opt/shibboleth-idp/metadata/idp-metadata.xml
+
+- name: fetch certificate to validate MDQ
+  get_url:
+    url: https://www.aai.dfn.de/fileadmin/metadata/dfn-aai-mdq.pem
+    dest: /etc/ssl/aai/dfn-aai-mdq.pem
+    # checksum of file on DFN server (not fingerprint on website)
+    checksum: sha256:61bdd1d78b686f21df36d0cc9a5598bc1673cbc8b86721dc51f8d3a6124b0e7f
+
+- name: add metadata providers
+  template:
+    src: templates/opt/shibboleth-idp/conf/metadata-providers.xml.j2
+    dest: /opt/shibboleth-idp/conf/metadata-providers.xml

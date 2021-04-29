@@ -1,0 +1,54 @@
+---
+- name: save sessions in database
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.session.StorageService"
+    line: idp.session.StorageService = shibboleth.JPAStorageService
+
+- name: save user consent in database
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.consent.StorageService"
+    line: idp.consent.StorageService = shibboleth.JPAStorageService
+
+- name: save user consent for attribute release in database I
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.consent.attribute-release.userStorageKey"
+    line: idp.consent.attribute-release.userStorageKey = shibboleth.consent.PrincipalConsentStorageKey
+
+- name: save user consent for attribute release in database II
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.consent.attribute-release.userStorageKeyAttribute"
+    line: idp.consent.attribute-release.userStorageKeyAttribute = %{idp.persistentId.sourceAttribute}
+
+- name: save user consent for terms of use in database I
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.consent.terms-of-use.userStorageKey"
+    line: idp.consent.terms-of-use.userStorageKey = shibboleth.consent.PrincipalConsentStorageKey
+
+- name: save user consent for terms of use in database II
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.consent.terms-of-use.userStorageKeyAttribute"
+    line: idp.consent.terms-of-use.userStorageKeyAttribute = %{idp.persistentId.sourceAttribute}
+
+- name: users have to consent for each SP
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.consent.allowGlobal"
+    line: idp.consent.allowGlobal = false
+
+- name: ask again when attribute values or terms of use change
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/idp.properties
+    regexp: "idp.consent.compareValues"
+    line: idp.consent.compareValues = true
+
+- name: take consent into account with Attribute Queries
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/intercept/consent-intercept-config.xml
+    regexp: '\<bean id\=\"shibboleth.consent.AttributeQuery.Condition\" parent\=\"shibboleth.Conditions.FALSE\" \/\>'
+    line: '<bean id="shibboleth.consent.AttributeQuery.Condition" parent="shibboleth.Conditions.TRUE" />'

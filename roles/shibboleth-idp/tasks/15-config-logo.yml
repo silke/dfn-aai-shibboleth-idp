@@ -1,0 +1,16 @@
+---
+- name: add the institution's logo
+  copy:
+    src: files/logo.png
+    dest: /opt/shibboleth-idp/edit-webapp/images/logo.png
+  notify: rebuild war file
+  # failure is allowed in case logo is missing
+  ignore_errors: true
+
+- name: add favicon
+  copy:
+    src: files/favicon.ico
+    dest: /opt/shibboleth-idp/edit-webapp/images/favicon.ico
+  notify: rebuild war file
+  # failure is allowed in case favicon is missing
+  ignore_errors: true

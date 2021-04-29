@@ -1,0 +1,5 @@
+- name: download German language file
+  get_url:
+    url: https://wiki.shibboleth.net/confluence/download/attachments/55804430/messages_de.properties
+    dest: /opt/shibboleth-idp/messages/messages_de.properties
+  notify: rebuild war file
