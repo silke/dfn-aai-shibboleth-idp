@@ -1,0 +1,63 @@
+---
+- name: install packages
+  apt:
+    name: ['apache2']
+    state: present
+
+- name: make sure apache is running
+  service:
+    name: apache2
+    state: restarted
+
+- name: load apache modules
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop:
+    # for sync and share SPs coming in via ECP
+    - authnz_ldap
+    - authz_groupfile
+    - headers
+    - proxy
+    - proxy_ajp
+    - rewrite
+    - ssl
+  notify: restart apache
+
+- name: configure ports
+  template:
+    src: templates/etc/apache2/ports.conf.j2
+    dest: /etc/apache2/ports.conf
+
+- name: configure SSL
+  blockinfile:
+    path: /etc/apache2/mods-enabled/ssl.conf
+    insertbefore: "</IfModule>"
+    block: |
+      # Mozilla SSL Configuration Generator
+      # https://ssl-config.mozilla.org/#server=apache&server-version=2.4.38&config=intermediate
+      # allow TLSv1.2 and TLSv1.3
+      SSLProtocol             all -SSLv3 -TLSv1 -TLSv1.1
+      SSLCipherSuite          ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+      # SSLHonorCipherOrder is turned off because many clients probably do not support ciphers needed for TLS 1.3 yet.
+      SSLHonorCipherOrder     Off
+      SSLCompression          Off
+      SSLSessionTickets       Off
+      SSLUseStapling          On
+      SSLStaplingCache        "shmcb:logs/ssl_stapling(32768)"
+      # HTTP Strict Transport Security (mod_headers is required) (63072000 seconds)
+      Header always set Strict-Transport-Security "max-age=63072000"
+      # forbid non-SNI clients to access name based virtual hosts
+      SSLStrictSNIVHostCheck On
+
+- name: ensure that the directories for ssl certs are present
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+    - /etc/ssl/aai
+    - /etc/ssl/localcerts
+
