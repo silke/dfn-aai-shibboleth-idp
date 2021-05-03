@@ -7,10 +7,25 @@
   # failure is allowed in case logo is missing
   ignore_errors: true
 
-- name: add favicon
+- name: add favicon file for metadata
   copy:
     src: files/favicon.ico
     dest: /opt/shibboleth-idp/edit-webapp/images/favicon.ico
   notify: rebuild war file
   # failure is allowed in case favicon is missing
   ignore_errors: true
+
+- name: add directory htdocs
+  file:
+    path: /opt/shibboleth-idp/htdocs
+    state: directory
+
+- name: add favicon for IdP
+  copy:
+    src: files/favicon.ico
+    dest: /opt/shibboleth-idp/htdocs/favicon.ico
+
+- name: create robots.txt, avoid errors from for search engines
+  template:
+    src: templates/opt/shibboleth-idp/htdocs/robots.txt.j2
+    dest: /opt/shibboleth-idp/htdocs/robots.txt

@@ -18,6 +18,13 @@
         ProxyPass ajp://localhost:8009/idp
         Header always append X-FRAME-OPTIONS "SAMEORIGIN"
     </Location>
+
+    # support favicon.ico and robots.txt
+    DocumentRoot /opt/shibboleth-idp/htdocs
+    <Directory /opt/shibboleth-idp/htdocs>
+        Require all granted
+    </Directory>
+
 </VirtualHost>
 
 ################################################
