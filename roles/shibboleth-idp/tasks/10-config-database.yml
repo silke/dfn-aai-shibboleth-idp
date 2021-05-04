@@ -26,6 +26,7 @@
     login_unix_socket: /var/run/mysqld/mysqld.sock
     login_user: "{{ database_admin }}"
     login_password: "{{ database_admin_password }}"
+  no_log: true
 
 - name: create a database user for shibboleth-idp
   mysql_user:
@@ -40,6 +41,7 @@
     login_host: "{{ database_host }}"
     login_user: "{{ database_admin }}"
     login_password: "{{ database_admin_password }}"
+  no_log: true
 
 - name: get mysqldumps for two database tables
   copy:
@@ -63,6 +65,7 @@
     - /tmp/table-storage-records.sql
   # import is not idempotent and thus may fail
   ignore_errors: true
+  no_log: true
 
 - name: configure database access via JPAStorageService
   blockinfile:
@@ -116,3 +119,4 @@
     path: /opt/shibboleth-idp/credentials/secrets.properties
     regexp: "^mysql.password"
     line: mysql.password = {{ database_password }}
+  no_log: true
