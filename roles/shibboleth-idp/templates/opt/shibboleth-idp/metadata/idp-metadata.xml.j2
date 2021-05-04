@@ -32,7 +32,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert.content | b64decode }}
+                        {{ samlcert.stdout }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -42,7 +42,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert.content | b64decode }}
+                        {{ samlcert.stdout }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -75,7 +75,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert.content | b64decode }}
+                        {{ samlcert.stdout }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -85,7 +85,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert.content | b64decode }}
+                        {{ samlcert.stdout }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
