@@ -1,7 +1,13 @@
-# How to use this repo to install a standalone Shibboleth Identity Provider
+# How to use this repo to install a Shibboleth Identity Provider
 
-## DRAFT!!! ENTWURF!!!
-Do not use this in production, yet! Feedback and tests needed!
+## USE AT YOUR OWN RISK!!!
+You can use this Ansible playbook to install a Shibboleth IdP according to the [DFN-AAI online documentation](https://doku.tid.dfn.de/de:shibidp:uebersicht). However, you do this at your own risk! 
+
+**Please be aware of the fact that the DFN-AAI team is not responsible for any issues caused by this playbook. You still have to understand what your IdP does and you have to take care of securing your server as needed.**
+
+## Contact
+
+You are welcome to send feedback about this work to hotline@aai.dfn.de. That said, we cannot adapt this playbook to all possible server setups or support you in details of getting it up and running. Please consult the [Ansible documentation](https://docs.ansible.com/ansible/latest/index.html) for this.
 
 ## Prerequisites
 
