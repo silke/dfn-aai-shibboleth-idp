@@ -1,11 +1,5 @@
 ---
-- hosts: test
-  roles:
-    - { role: 'tomcat', tags: 'tomcat' }
-    - { role: 'apache', tags: 'apache' }
-    - { role: 'shibboleth-idp', tags: 'shibboleth-idp' }
-
-- hosts: production
+- hosts: all
   roles:
     - { role: 'tomcat', tags: 'tomcat' }
     - { role: 'apache', tags: 'apache' }
