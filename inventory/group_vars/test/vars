@@ -1,8 +1,8 @@
 # These are IdP variables for the test IdP:
 
-### service IP addresses
+### service IP addresses, ipv6 is optional
 idp_ipv4: ""
-idp_ipv6: ""
+# idp_ipv6: ""
 institution_name_de: "Beispiel Uni IdP (Test)"
 institution_name_en: "Example Uni IdP (Test)"
 institution_desc_de: "Identity Provider Beispiel Uni (Test)"

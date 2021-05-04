@@ -1,7 +1,11 @@
 #jinja2: lstrip_blocks: "True"
 # {{ ansible_managed }}
 
+{% if idp_ipv6 is defined %}
 <VirtualHost {{ idp_ipv4 }}:443 {{ idp_ipv6 }}:443>
+{% else %}
+<VirtualHost {{ idp_ipv4 }}:443>
+{% endif %}
     ServerName {{ idp_fqdn }}
     RedirectMatch permanent ^/$ https://{{ idp_fqdn }}/idp/
 
@@ -31,7 +35,11 @@
 
 # ArtifactResolutionService und AttributeService auf Port 8443
 
+{% if idp_ipv6 is defined %}
 <VirtualHost {{ idp_ipv4 }}:8443 {{ idp_ipv6 }}:8443>
+{% else %}
+<VirtualHost {{ idp_ipv4 }}:8443>
+{% endif %}
     ServerName              {{ idp_fqdn }}
     # Backchannel options
     SSLVerifyClient       optional_no_ca

@@ -1,13 +1,22 @@
 ---
 ### conf/access-control.xml ###
-- name: configure access to IdP webservices
+- name: configure access to IdP webservices for server with ipv6
   lineinfile:
     path: /opt/shibboleth-idp/conf/access-control.xml
     regexp: "p:allowedRanges"
     line: p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}', '{{ statuspage_ipv6 }}'} }" />
     insertafter: '<bean parent="shibboleth.IPRangeAccessControl"'
+  when: idp_ipv6 is defined
 
-- name: configure access to status page for own and DFN monitoring IP ranges
+- name: configure access to IdP webservices for servers without ipv6
+  lineinfile:
+    path: /opt/shibboleth-idp/conf/access-control.xml
+    regexp: "p:allowedRanges"
+    line: p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}'" />
+    insertafter: '<bean parent="shibboleth.IPRangeAccessControl"'
+  when: idp_ipv6 is undefined
+
+- name: configure access to status page for own and DFN monitoring IP ranges with ipv6
   blockinfile:
     path: /opt/shibboleth-idp/conf/access-control.xml
     block: |
@@ -16,6 +25,18 @@
       </entry>
     insertbefore: "</util:map>"
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+  when: idp_ipv6 is defined
+
+- name: configure access to status page for own and DFN monitoring IP ranges without ipv6
+  blockinfile:
+    path: /opt/shibboleth-idp/conf/access-control.xml
+    block: |
+      <entry key="StatusAccessByIPAddress">
+          <bean parent="shibboleth.IPRangeAccessControl" p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}', '193.174.247.0/24', '2001:638:206:1::/64'} }" />
+      </entry>
+    insertbefore: "</util:map>"
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+  when: idp_ipv6 is undefined
 
 - name: add reference to access policy in idp.properties
   lineinfile:
