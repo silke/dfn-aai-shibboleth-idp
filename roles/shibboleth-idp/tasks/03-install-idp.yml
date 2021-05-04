@@ -37,6 +37,11 @@
     remote_src: yes
   when: verified_download is succeeded
 
+- name: make sure installation directory exists
+  file:
+    path: /opt/shibboleth-idp
+    state: directory
+
 - name: merge.properties file for non-interactive installation
   template:
     src: templates/opt/shibboleth-idp/idp.merge.properties.j2
