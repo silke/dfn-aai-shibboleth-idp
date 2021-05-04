@@ -58,11 +58,11 @@ metadata_test: true
 metadata_dfnaai: true
 metadata_edugain: true
 # file name of your local metadata, format: dfn-aai-local-999-metadata.xml
-metadata_local: "dfn-aai-local-999-metadata.xml"
+metadata_local:
 
 loglevel: "DEBUG"
 
 ### access to IdP status page, format: 127.0.0.1/32 ###
 statuspage_ipv4: ""
-### access to IdP status page, format: ::1/128
-statuspage_ipv6: ""
+### access to IdP status page, format: ::1/128, ipv6 is optional ###
+# statuspage_ipv6: ""

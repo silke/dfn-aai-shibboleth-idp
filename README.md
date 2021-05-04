@@ -5,7 +5,7 @@ Do not use this in production, yet! Feedback and tests needed!
 
 ## Prerequisites
 
-* Use a Debian 10 machine, other distros have not been tested.
+* Use a Debian 10 or an Ubuntu 20.04 machine, other distros have not been tested.
 * This playbook creates a MariaDB database for your IdP. However it does not secure your database server. You might want to prepare MariaDB beforehand, e.g. by running
 ```
 apt install mariadb-server mariadb-client libmariadb-java
@@ -55,3 +55,4 @@ echo "vault-password.txt" >> .gitignore
 * messages.properties have not been adapted.
 * The Login and Logout pages have not been adapted.
 * No cronjob are added - backup of user consent information is not included.
+* Private IP addresses may cause issues in the webserver configuration. Adapt the according template to your needs.
