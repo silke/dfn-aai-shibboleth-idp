@@ -15,7 +15,7 @@
     name: ssl-cert
     state: present
 
-- name: add tomcat user too ssl-cert group
+- name: add tomcat user to ssl-cert group
   user:
     name: tomcat
     groups: ssl-cert
