@@ -58,6 +58,7 @@ metadata_test: true
 metadata_dfnaai: true
 metadata_edugain: true
 # file name of your local metadata, format: dfn-aai-local-999-metadata.xml
+# Add a comment to the following line if you don't have local metadata yet.
 metadata_local:
 
 loglevel: "DEBUG"

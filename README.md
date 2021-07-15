@@ -67,3 +67,4 @@ echo "vault-password.txt" >> .gitignore
 * The Login and Logout pages have not been adapted.
 * No cronjob are added - backup of user consent information is not included.
 * Private IP addresses may cause issues in the webserver configuration. Adapt the according template to your needs.
+* If you haven't activated local metadata for your institution in our metadata administration tool or if your local metadata file is still empty add a comment to the line ```metadata_local:``` in ```inventory/group_vars/all/vars```. Otherwise you will get a faulty ```/opt/shibboleth-idp/conf/metadata-providers.xml``` file in your IdP.
