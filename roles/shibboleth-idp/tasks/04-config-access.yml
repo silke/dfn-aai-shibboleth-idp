@@ -12,7 +12,7 @@
   lineinfile:
     path: /opt/shibboleth-idp/conf/access-control.xml
     regexp: "p:allowedRanges"
-    line: p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}'" />
+    line: p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}'} }" />
     insertafter: '<bean parent="shibboleth.IPRangeAccessControl"'
   when: idp_ipv6 is undefined
 
