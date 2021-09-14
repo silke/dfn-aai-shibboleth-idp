@@ -19,7 +19,7 @@
   get_url:
     url: "{{ item }}"
     dest: /opt/install
-    force: no
+    force: false
   loop:
     - "https://shibboleth.net/downloads/identity-provider/{{ shibboleth_idp_version }}/shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz"
     - "https://shibboleth.net/downloads/identity-provider/{{ shibboleth_idp_version }}/shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz.asc"

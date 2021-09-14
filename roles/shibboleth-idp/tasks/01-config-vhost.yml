@@ -24,7 +24,7 @@
     owner: root
     group: root
     mode: 0644
-    force: no
+    force: false
     # this is the sha256sum of the file, not the openssl fingerprint published on the website
     checksum: sha256:951fa63523dca5dae9a4a7e76616ead21d07290c8ae4dc3e8880c34d7fd08a2d
 
