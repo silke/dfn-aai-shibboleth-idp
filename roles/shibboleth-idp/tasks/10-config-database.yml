@@ -110,7 +110,7 @@
     path: /opt/shibboleth-idp/conf/idp.properties
     block: |
       mysql.class    = org.apache.tomcat.jdbc.pool.DataSource
-      mysql.url      = jdbc:mysql://{{ database_host }}:3306/{{ database_name}}
+      mysql.url      = jdbc:mysql://{{ database_host }}:3306/{{ database_name }}
       mysql.username = {{ database_user }}
     insertbefore: EOF
 
