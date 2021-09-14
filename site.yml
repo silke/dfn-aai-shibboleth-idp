@@ -1,6 +1,12 @@
 ---
 - hosts: all
   roles:
-    - { role: 'tomcat', tags: 'tomcat' }
-    - { role: 'apache', tags: 'apache' }
-    - { role: 'shibboleth-idp', tags: 'shibboleth-idp' }
+    - role: 'tomcat'
+      tags:
+        - 'tomcat'
+    - role: 'apache'
+      tags:
+        - 'apache'
+    - role: 'shibboleth-idp'
+      tags:
+        - 'shibboleth-idp'
