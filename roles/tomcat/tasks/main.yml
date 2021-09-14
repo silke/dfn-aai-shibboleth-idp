@@ -19,7 +19,7 @@
   user:
     name: tomcat
     groups: ssl-cert
-    append: yes
+    append: true
 
 # Systemd override configuration so that tomcat can write logs and metadata.
 # The target directories have to exist before the override is created.
@@ -34,7 +34,7 @@
   file:
     path: /opt/shibboleth-idp/metadata
     state: directory
-    recurse: yes
+    recurse: true
 
 - name: Create /opt/shibboleth-idp/logs directory
   file:
@@ -46,7 +46,7 @@
 - name: make logs and metadata directories read-writeable
   blockinfile:
     path: /etc/systemd/system/tomcat9.service.d/override.conf
-    create: yes
+    create: true
     block: |
       [Service]
       ReadWritePaths=/opt/shibboleth-idp/logs

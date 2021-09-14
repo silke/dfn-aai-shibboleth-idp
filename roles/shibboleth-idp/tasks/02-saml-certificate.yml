@@ -28,9 +28,9 @@
     owner: root
     group: ssl-cert
     mode: 0640
-    backup: yes
+    backup: true
 
-# force regeneration with force: yes
+# force regeneration with force: true
 - name: generate certificate signing request
   community.crypto.openssl_csr:
     path: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"
@@ -40,7 +40,7 @@
     organizational_unit_name: "{{ openssl_org_unit }}"
     email_address: "{{ openssl_email_address }}"
     common_name: "{{ idp_fqdn }}"
-    backup: yes
+    backup: true
 
 - name: sign the csr
   community.crypto.x509_certificate:

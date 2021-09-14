@@ -20,7 +20,7 @@
     name: "{{ database_name }}"
     state: present
     encoding: utf8
-    check_implicit_admin: yes
+    check_implicit_admin: true
     # connect via network or socket depending on your needs
     # login_host: "{{ database_host }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
@@ -34,7 +34,7 @@
     state: present
     password: "{{ database_password }}"
     priv: "{{ database_name }}.*:ALL"
-    check_implicit_admin: yes
+    check_implicit_admin: true
     # connect via network or socket depending on your needs
     # login_host: "{{ database_host }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock

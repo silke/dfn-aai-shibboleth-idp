@@ -40,7 +40,7 @@
   unarchive:
     src: "/opt/install/shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz"
     dest: /opt/install
-    remote_src: yes
+    remote_src: true
   when: verified_download is succeeded
 
 - name: make sure installation directory exists
@@ -67,7 +67,7 @@
     owner: root
     group: tomcat
     mode: 0755
-    recurse: yes
+    recurse: true
   loop:
     - /opt/shibboleth-idp/conf
     - /opt/shibboleth-idp/credentials
@@ -78,7 +78,7 @@
     state: directory
     owner: tomcat
     group: tomcat
-    recurse: yes
+    recurse: true
   loop:
     - /opt/shibboleth-idp/logs
     - /opt/shibboleth-idp/metadata
