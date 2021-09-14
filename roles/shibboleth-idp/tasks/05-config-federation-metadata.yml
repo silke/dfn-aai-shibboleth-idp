@@ -6,10 +6,14 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   loop:
-    - { regexp: "^idp.signing.key", line: "idp.signing.key=/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem" }
-    - { regexp: "^idp.signing.cert", line: "idp.signing.cert=/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem" }
-    - { regexp: "^idp.encryption.key", line: "idp.encryption.key=/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem" }
-    - { regexp: "^idp.encryption.cert", line: "idp.encryption.cert=/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem" }
+    - regexp: "^idp.signing.key"
+      line: "idp.signing.key=/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
+    - regexp: "^idp.signing.cert"
+      line: "idp.signing.cert=/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
+    - regexp: "^idp.encryption.key"
+      line: "idp.encryption.key=/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
+    - regexp: "^idp.encryption.cert"
+      line: "idp.encryption.cert=/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
 
 - name: cut off the BEGIN and END lines of cert
   command: "sed '1d;$d' /etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
