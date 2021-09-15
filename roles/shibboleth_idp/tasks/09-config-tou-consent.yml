@@ -10,6 +10,7 @@
     state: file
     owner: root
     group: tomcat
+    mode: 0755
 
 - name: modify consent intercept configuration
   blockinfile:
@@ -27,6 +28,7 @@
     dest: /opt/shibboleth-idp/conf/relying-party.xml
     owner: root
     group: tomcat
+    mode: 0755
 
 - name: Add link to terms of use in footer
   copy:
@@ -69,4 +71,7 @@
           </div>
         </body>
       </html>
+    owner: root
+    group: root
+    mode: 0644
   notify: rebuild war file

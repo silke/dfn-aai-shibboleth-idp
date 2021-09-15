@@ -3,6 +3,9 @@
   copy:
     src: files/logo.png
     dest: /opt/shibboleth-idp/edit-webapp/images/logo.png
+    owner: root
+    group: root
+    mode: 0644
   notify: rebuild war file
   # failure is allowed in case logo is missing
   ignore_errors: true
@@ -11,6 +14,9 @@
   copy:
     src: files/favicon.ico
     dest: /opt/shibboleth-idp/edit-webapp/images/favicon.ico
+    owner: root
+    group: root
+    mode: 0644
   notify: rebuild war file
   # failure is allowed in case favicon is missing
   ignore_errors: true
@@ -19,13 +25,22 @@
   file:
     path: /opt/shibboleth-idp/htdocs
     state: directory
+    owner: root
+    group: root
+    mode: 0755
 
 - name: add favicon for IdP
   copy:
     src: files/favicon.ico
     dest: /opt/shibboleth-idp/htdocs/favicon.ico
+    owner: root
+    group: root
+    mode: 0644
 
 - name: create robots.txt, avoid errors from for search engines
   template:
     src: templates/opt/shibboleth-idp/htdocs/robots.txt.j2
     dest: /opt/shibboleth-idp/htdocs/robots.txt
+    owner: root
+    group: root
+    mode: 0644

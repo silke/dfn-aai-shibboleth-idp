@@ -29,12 +29,16 @@
     state: directory
     owner: root
     group: root
+    mode: 0755
 
 - name: Create /opt/shibboleth-idp directory
   file:
     path: /opt/shibboleth-idp/metadata
     state: directory
     recurse: true
+    owner: tomcat
+    group: tomcat
+    mode: 0755
 
 - name: Create /opt/shibboleth-idp/logs directory
   file:
@@ -42,6 +46,7 @@
     state: directory
     owner: tomcat
     group: tomcat
+    mode: 0755
 
 - name: make logs and metadata directories read-writeable
   blockinfile:
@@ -51,6 +56,9 @@
       [Service]
       ReadWritePaths=/opt/shibboleth-idp/logs
       ReadWritePaths=/opt/shibboleth-idp/metadata
+    owner: root
+    group: root
+    mode: 0644
   notify: daemon-reload
 
 - name: template for /etc/tomcat9/server.xml

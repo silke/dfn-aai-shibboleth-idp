@@ -28,6 +28,9 @@
   template:
     src: templates/etc/apache2/ports.conf.j2
     dest: /etc/apache2/ports.conf
+    owner: root
+    group: root
+    mode: 0644
 
 - name: configure SSL
   blockinfile:

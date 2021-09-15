@@ -153,6 +153,9 @@
   template:
     src: "templates/etc/apache2/sites-available/vhost.conf.j2"
     dest: "/etc/apache2/sites-available/{{ idp_fqdn }}.conf"
+    owner: root
+    group: root
+    mode: 0644
 
 - name: enable the vhost
   command: "a2ensite {{ idp_fqdn }}.conf"

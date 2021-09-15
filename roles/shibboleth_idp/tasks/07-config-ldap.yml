@@ -3,6 +3,9 @@
   template:
     src: templates/opt/shibboleth-idp/conf/ldap.properties.j2
     dest: /opt/shibboleth-idp/conf/ldap.properties
+    owner: root
+    group: tomcat
+    mode: 0755
 
 - name: configure LDAP password
   lineinfile:

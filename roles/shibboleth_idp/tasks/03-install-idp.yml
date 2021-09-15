@@ -13,6 +13,9 @@
   file:
     path: /opt/install
     state: directory
+    owner: root
+    group: root
+    mode: 0755
 
 # Download the Shibboleth version number given in group_vars/idphosts/vars
 - name: download the latest shibboleth-idp
@@ -47,11 +50,17 @@
   file:
     path: /opt/shibboleth-idp
     state: directory
+    owner: root
+    group: root
+    mode: 0755
 
 - name: merge.properties file for non-interactive installation
   template:
     src: templates/opt/shibboleth-idp/idp.merge.properties.j2
     dest: "/opt/shibboleth-idp/idp.merge.properties"
+    owner: root
+    group: root
+    mode: 0644
 
 - name: run the shibboleth installer
   shell: "JAVA_HOME=/usr /opt/install/shibboleth-identity-provider-{{ shibboleth_idp_version }}/bin/install.sh -Didp.src.dir=/opt/install/shibboleth-identity-provider-{{ shibboleth_idp_version }} -Didp.target.dir=/opt/shibboleth-idp -Didp.host.name={{ idp_fqdn }} -Didp.scope={{ scope }} -Didp.keystore.password={{ keystore_password }} -Didp.sealer.password={{ sealer_password }} -Didp.merge.properties=/opt/shibboleth-idp/idp.merge.properties >> /opt/shibboleth-idp/.ansible_initial_installation_successful.log"

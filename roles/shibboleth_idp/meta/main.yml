@@ -1,4 +1,29 @@
+galaxy_info:
+  role_name: shibboleth_idp
+  author: Silke Meyer <smeyer@dfn.de> and contributors, see commit history
+  description: Install a Shibboleth Identity Provider according to the DFN-AAI basic setup
+  company: Verein zur Förderung eines Deutschen Forschungsnetzes e.V.
+  issue_tracker_url: https://jugit.fz-juelich.de/dfn/dfn-aai-shibboleth-idp/-/issues
+  license: AGPLv3
+  min_ansible_version: 1.2
+
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        # bullseye is still untested
+    - name: Ubuntu
+      versions:
+        - focal
+
+  galaxy_tags:
+    - shibboleth
+    - sso
+    - identityprovider
+    - university
+    - dfnaai
+
 dependencies:
   - role: tomcat
   - role: apache
-  
+

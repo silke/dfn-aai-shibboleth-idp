@@ -47,6 +47,9 @@
   copy:
     src: "{{ item }}"
     dest: /tmp
+    owner: root
+    group: root
+    mode: 0644
   with_fileglob:
     - "files/*.sql"
 
