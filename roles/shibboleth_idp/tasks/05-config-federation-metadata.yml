@@ -33,7 +33,7 @@
     url: https://www.aai.dfn.de/fileadmin/metadata/dfn-aai-mdq.pem
     dest: /etc/ssl/aai/dfn-aai-mdq.pem
     # checksum of file on DFN server (not fingerprint on website)
-    checksum: sha256:61bdd1d78b686f21df36d0cc9a5598bc1673cbc8b86721dc51f8d3a6124b0e7f
+    checksum: "{{ mdq_checksum }}"
 
 - name: add metadata providers
   template:
