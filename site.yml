@@ -7,6 +7,6 @@
     - role: 'apache'
       tags:
         - 'apache'
-    - role: 'shibboleth-idp'
+    - role: 'shibboleth_idp'
       tags:
-        - 'shibboleth-idp'
+        - 'shibboleth_idp'
