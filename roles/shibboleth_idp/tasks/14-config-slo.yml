@@ -16,5 +16,3 @@
     path: /opt/shibboleth-idp/conf/idp.properties
     regexp: "idp.logout.elaboration"
     line: idp.logout.elaboration = true
-
-  

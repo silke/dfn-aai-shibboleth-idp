@@ -4,7 +4,7 @@
 
 - import_tasks: 02-saml-certificate.yml
   tags: saml-certificate
-  
+
 - import_tasks: 03-install-idp.yml
   tags: install-idp
 

@@ -22,4 +22,3 @@
     path: /opt/shibboleth-idp/conf/logback.xml
     regexp: '.*\{short\}\<\/Pattern\>$'
     line: '<Pattern>%date{ISO8601} - %level [%logger:%line] - IP:%mdc{idp.remote_addr:-n/a} - %msg%n%ex{short}</Pattern>'
-

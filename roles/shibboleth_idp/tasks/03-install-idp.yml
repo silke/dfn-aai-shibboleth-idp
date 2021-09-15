@@ -1,4 +1,4 @@
-#GPG is not installed by default on some APT based distributions
+# GPG is not installed by default on some APT based distributions
 - name: ensure that gpg is installed
   apt:
     name: gpg

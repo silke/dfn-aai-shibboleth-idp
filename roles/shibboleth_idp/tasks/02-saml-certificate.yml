@@ -48,5 +48,5 @@
     privatekey_path: "/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
     csr_path: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"
     selfsigned_not_before: "{{ current_date.stdout }}"
-    selfsigned_not_after: "{{ selfsigned_not_after}}"
+    selfsigned_not_after: "{{ selfsigned_not_after }}"
     provider: selfsigned
