@@ -1,25 +1,25 @@
 ---
-- name: add the institution's logo
+- name: add institution branding
+  # look for favicon and logo but only try to copy them if they exist
+  loop: >
+    {{
+      query('fileglob', 'files/logo.png') |
+      join(
+        query('fileglob', 'files/favicon.ico')
+      )
+    }}
+  loop_control:
+    loop_var: brand_image
   copy:
-    src: files/logo.png
-    dest: /opt/shibboleth-idp/edit-webapp/images/logo.png
+    src: "{{ brand_image }}"
+    dest: "{{
+      '/opt/shibboleth-idp/edit-webapp/images/' +
+      (brand_image | basename)
+    }}"
     owner: root
     group: root
     mode: 0644
   notify: rebuild war file
-  # failure is allowed in case logo is missing
-  ignore_errors: true
-
-- name: add favicon file for metadata
-  copy:
-    src: files/favicon.ico
-    dest: /opt/shibboleth-idp/edit-webapp/images/favicon.ico
-    owner: root
-    group: root
-    mode: 0644
-  notify: rebuild war file
-  # failure is allowed in case favicon is missing
-  ignore_errors: true
 
 - name: add directory htdocs
   file:
