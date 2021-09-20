@@ -29,6 +29,7 @@
     group: ssl-cert
     mode: 0640
     backup: true
+  register: saml_privatekey
 
 # force regeneration with force: true
 - name: generate certificate signing request
@@ -50,3 +51,4 @@
     selfsigned_not_before: "{{ current_date.stdout }}"
     selfsigned_not_after: "{{ selfsigned_not_after }}"
     provider: selfsigned
+  register: saml_certificate
