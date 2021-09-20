@@ -32,7 +32,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert.stdout }}
+                        {{ samlcert_content }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -42,7 +42,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert.stdout }}
+                        {{ samlcert_content }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -75,7 +75,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert.stdout }}
+                        {{ samlcert_content }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -85,7 +85,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert.stdout }}
+                        {{ samlcert_content }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -97,7 +97,7 @@
         <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
 
     </AttributeAuthorityDescriptor>
-    
+
 
     {% for item in metadata_contacts %}
     {% if item.name != "security" %}
@@ -112,7 +112,7 @@
       <GivenName>{{ item.givenName }}</GivenName>
       <SurName>{{ item.surName }}</SurName>
       <EmailAddress>{{ item.eMail }}</EmailAddress>
-    </ContactPerson>    
+    </ContactPerson>
     {% endif %}
     {% endfor %}
 

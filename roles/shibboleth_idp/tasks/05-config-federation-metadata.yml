@@ -21,6 +21,8 @@
 
 # manipulated and hopefully complete idp-metadata.xml
 - name: fill in initial idp-metadata.xml for DFN-AAI metadata administration tool
+  vars:
+    samlcert_content: "{{ samlcert.stdout }}"
   template:
     src: templates/opt/shibboleth-idp/metadata/idp-metadata.xml.j2
     dest: /opt/shibboleth-idp/metadata/idp-metadata.xml
