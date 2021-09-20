@@ -15,14 +15,10 @@
     - regexp: "^idp.encryption.cert"
       line: "{{ 'idp.encryption.cert=' + saml_certificate['filename'] }}"
 
-- name: cut off the BEGIN and END lines of cert
-  command: "sed '1d;$d' /etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
-  register: samlcert
-
 # manipulated and hopefully complete idp-metadata.xml
 - name: fill in initial idp-metadata.xml for DFN-AAI metadata administration tool
   vars:
-    samlcert_content: "{{ samlcert.stdout }}"
+    samlcert_content: "{{ saml_certificate['certificate'] }}"
   template:
     src: templates/opt/shibboleth-idp/metadata/idp-metadata.xml.j2
     dest: /opt/shibboleth-idp/metadata/idp-metadata.xml
