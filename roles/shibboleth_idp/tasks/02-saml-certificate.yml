@@ -38,12 +38,13 @@
     email_address: "{{ openssl_email_address }}"
     common_name: "{{ idp_fqdn }}"
     backup: true
+  register: saml_certificatesigningrequest
 
 - name: sign the csr
   community.crypto.x509_certificate:
     path: "/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
     privatekey_path: "{{ saml_privatekey['filename'] }}"
-    csr_path: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"
+    csr_path: "{{ saml_certificatesigningrequest['filename'] }}"
     selfsigned_not_before: "+0s"
     selfsigned_not_after: "{{ selfsigned_not_after }}"
     provider: selfsigned
