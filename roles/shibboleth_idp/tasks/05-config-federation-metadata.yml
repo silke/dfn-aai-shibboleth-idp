@@ -16,7 +16,7 @@
       line: "{{ 'idp.encryption.cert=' + saml_certificate['filename'] }}"
 
 # manipulated and hopefully complete idp-metadata.xml
-- name: fill in initial idp-metadata.xml for DFN-AAI metadata administration tool
+- name: create idp-metadata.xml for DFN-AAI metadata administration tool
   vars:
     samlcert_content: "{{ saml_certificate['certificate'] }}"
   template:
