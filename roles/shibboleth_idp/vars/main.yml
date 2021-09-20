@@ -1,3 +1,16 @@
 ---
 mdq_checksum: >-
   "sha256:61bdd1d78b686f21df36d0cc9a5598bc1673cbc8b86721dc51f8d3a6124b0e7f"
+
+idp_installation_script: "{{
+      '/opt/install/shibboleth-identity-provider-' +
+      shibboleth_idp_version +
+      '/bin/install.sh'
+}}"
+idp_src_dir: "{{
+      '/opt/install/shibboleth-identity-provider-' +
+      shibboleth_idp_version
+}}"
+
+idp_ansible_indicator: >-
+    /opt/shibboleth-idp/.ansible_initial_installation_successful.log
