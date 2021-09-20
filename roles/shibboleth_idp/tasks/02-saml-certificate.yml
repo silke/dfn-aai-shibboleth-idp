@@ -51,4 +51,5 @@
     selfsigned_not_before: "{{ current_date.stdout }}"
     selfsigned_not_after: "{{ selfsigned_not_after }}"
     provider: selfsigned
+    return_content: true
   register: saml_certificate
