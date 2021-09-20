@@ -6,10 +6,6 @@
     name: ['openssl', 'python3-cryptography']
     state: present
 
-- name: register the current UTC timestamp for cert validity
-  command: date -u '+%Y%m%d%H%M%SZ'
-  register: current_date
-
 - name: ensure that the directories for ssl certs are present
   file:
     path: "{{ item }}"
@@ -48,7 +44,7 @@
     path: "/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
     privatekey_path: "/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
     csr_path: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"
-    selfsigned_not_before: "{{ current_date.stdout }}"
+    selfsigned_not_before: "+0s"
     selfsigned_not_after: "{{ selfsigned_not_after }}"
     provider: selfsigned
     return_content: true
