@@ -25,9 +25,9 @@
     dest: /opt/install
     force: false
   loop:
-    - "https://shibboleth.net/downloads/identity-provider/{{ shibboleth_idp_version }}/shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz"
-    - "https://shibboleth.net/downloads/identity-provider/{{ shibboleth_idp_version }}/shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz.asc"
-    - "https://shibboleth.net/downloads/PGP_KEYS"
+    - "{{ idp_archive_url }}"
+    - "{{ idp_archive_checksum_url }}"
+    - "{{ idp_keys_url }}"
 
 - name: import the PGP key
   command: gpg --import PGP_KEYS

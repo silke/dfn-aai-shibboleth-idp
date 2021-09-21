@@ -17,3 +17,27 @@ idp_ansible_indicator: >-
 
 statuspage_dfn_ipv4: "193.174.247.0/24"
 statuspage_dfn_ipv6: "2001:638:206:1::/64"
+
+idp_archive_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/' +
+  shibboleth_idp_version +
+  '/shibboleth-identity-provider-' +
+  shibboleth_idp_version +
+  '.tar.gz'
+}}"
+
+idp_archive_checksum_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/' +
+  shibboleth_idp_version +
+  '/shibboleth-identity-provider-' +
+  shibboleth_idp_version +
+  '.tar.gz'
+}}"
+
+idp_keys_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/' +
+  shibboleth_idp_version +
+  '/shibboleth-identity-provider-' +
+  shibboleth_idp_version +
+  '.tar.gz'
+}}"
