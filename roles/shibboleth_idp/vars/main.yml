@@ -14,3 +14,6 @@ idp_src_dir: "{{
 
 idp_ansible_indicator: >-
     /opt/shibboleth-idp/.ansible_initial_installation_successful.log
+
+statuspage_dfn_ipv4: "193.174.247.0/24"
+statuspage_dfn_ipv6: "2001:638:206:1::/64"
