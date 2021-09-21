@@ -46,7 +46,11 @@
 
 - name: extract the archive if verified
   unarchive:
-    src: "/opt/install/shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz"
+    src: "{{
+      '/opt/install/shibboleth-identity-provider-' +
+      shibboleth_idp_version +
+      '.tar.gz'
+    }}"
     dest: /opt/install
     remote_src: true
   when: verified_download is succeeded
