@@ -36,7 +36,9 @@
   blockinfile:
     path: /etc/apache2/mods-enabled/ssl.conf
     insertbefore: "</IfModule>"
-    block: "{{ lookup('file', 'templates/block-mozilla-ssl-config-generator.j2' }}"
+    block: "{{
+      lookup('file', 'templates/block-mozilla-ssl-config-generator.j2')
+    }}"
 
 - name: ensure that the directories for ssl certs are present
   file:
