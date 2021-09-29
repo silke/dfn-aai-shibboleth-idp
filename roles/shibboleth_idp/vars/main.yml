@@ -31,13 +31,9 @@ idp_archive_checksum_url: "{{
   shibboleth_idp_version +
   '/shibboleth-identity-provider-' +
   shibboleth_idp_version +
-  '.tar.gz'
+  '.tar.gz.asc'
 }}"
 
 idp_keys_url: "{{
-  'https://shibboleth.net/downloads/identity-provider/' +
-  shibboleth_idp_version +
-  '/shibboleth-identity-provider-' +
-  shibboleth_idp_version +
-  '.tar.gz'
+  'https://shibboleth.net/downloads/PGP_KEYS'
 }}"
