@@ -4,10 +4,10 @@
     name: ['apache2']
     state: present
 
-- name: make sure apache is running
+- name: make sure apache is enabled
   service:
     name: apache2
-    state: restarted
+    state: enabled
 
 - name: load apache modules
   apache2_module:
