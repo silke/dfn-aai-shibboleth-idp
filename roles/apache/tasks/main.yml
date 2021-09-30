@@ -7,7 +7,7 @@
 - name: make sure apache is enabled
   service:
     name: apache2
-    state: enabled
+    enabled: true
 
 - name: load apache modules
   apache2_module:
