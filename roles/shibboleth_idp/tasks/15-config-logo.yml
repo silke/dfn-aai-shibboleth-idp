@@ -7,8 +7,8 @@
         query('fileglob', 'files/logo.png') |
         list
       )
-      |
-      join(
+      +
+      (
         query('fileglob', 'files/favicon.ico') |
         list
       )
