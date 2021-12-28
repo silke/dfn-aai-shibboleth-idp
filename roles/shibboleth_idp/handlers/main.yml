@@ -10,8 +10,12 @@
     state: restarted
 
 - name: rebuild war file
-  shell: "JAVA_HOME=/usr ./bin/build.sh -Didp.target.dir=/opt/shibboleth-idp"
-  args:
+  environment:
+    JAVA_HOME: "/usr"
+  command:
+    argv:
+      - "./bin/build.sh"
+      - "-Didp.target.dir=/opt/shibboleth-idp"
     chdir: "/opt/shibboleth-idp"
 
 - name: reload instance
