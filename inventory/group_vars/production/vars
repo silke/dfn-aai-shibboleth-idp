@@ -2,7 +2,7 @@
 
 ### service IP addresses, ipv6 is optional
 
-idp_ipv4: ""
+idp_ipv4: "*"
 # idp_ipv6: ""
 institution_name_de: "Beispiel Uni IdP"
 institution_name_en: "Example Uni IdP"
