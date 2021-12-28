@@ -33,6 +33,8 @@
   command: gpg --import PGP_KEYS
   args:
     chdir: /opt/install
+  register: import_pgp_keys
+  changed_when: "'imported:' in import_pgp_keys.stdout"
 
 - name: verify the download
   command: >
@@ -43,6 +45,7 @@
   args:
     chdir: /opt/install
   register: verified_download
+  changed_when: false
 
 - name: extract the archive if verified
   unarchive:
