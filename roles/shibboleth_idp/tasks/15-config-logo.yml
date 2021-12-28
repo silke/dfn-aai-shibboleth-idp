@@ -3,10 +3,16 @@
   # look for favicon and logo but only try to copy them if they exist
   loop: >
     {{
-      query('fileglob', 'files/logo.png') |
-      join(
-        query('fileglob', 'files/favicon.ico')
+      (
+        query('fileglob', 'files/logo.png') |
+        list
       )
+      |
+      join(
+        query('fileglob', 'files/favicon.ico') |
+        list
+      )
+      | default([])
     }}
   loop_control:
     loop_var: brand_image
