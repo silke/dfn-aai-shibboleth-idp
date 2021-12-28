@@ -156,6 +156,7 @@
     owner: root
     group: root
     mode: 0644
+    validate: apache2 -t %s
 
 - name: enable the vhost
   command: "a2ensite {{ idp_fqdn }}.conf"
