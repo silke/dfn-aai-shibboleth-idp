@@ -4,6 +4,7 @@ shibboleth_idp_version: 4.1.4
 
 ### self-signed SAML certificate ###
 selfsigned_not_after: "+1095d"
+openssl_country_name: "DE"
 openssl_org_name: "Your home institution's name"
 openssl_org_unit: "Your department for certificate"
 openssl_email_address: "Mail address for certificate"

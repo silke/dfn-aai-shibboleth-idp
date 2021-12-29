@@ -32,7 +32,7 @@
   community.crypto.openssl_csr:
     path: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"
     privatekey_path: "{{ saml_privatekey['filename'] }}"
-    country_name: DE
+    country_name: "{{ openssl_country_name }}"
     organization_name: "{{ openssl_org_name }}"
     organizational_unit_name: "{{ openssl_org_unit }}"
     email_address: "{{ openssl_email_address }}"
