@@ -1,8 +1,22 @@
 ---
 - name: enable the intercept consent module
-  shell: "bin/module.sh -t idp.intercept.Consent || bin/module.sh -e idp.intercept.Consent"
-  args:
-    chdir: /opt/shibboleth-idp
+  block:
+
+    - name: check if the intercept consent module is enabled
+      command: "bin/module.sh --test idp.intercept.Consent"
+      args:
+        chdir: /opt/shibboleth-idp
+      register: idp_intercept_consent_status
+      failed_when: idp_intercept_consent_status.rc != 0
+
+  rescue:
+
+    - name: enable the intercept consent module
+      command: "bin/module.sh --enable idp.intercept.Consent"
+      args:
+        chdir: /opt/shibboleth-idp
+      register: idp_intercept_consent_enable
+      failed_when: "'[FAILED]' in idp_intercept_consent_enable.stdout"
 
 - name: correct file permissions
   file:
