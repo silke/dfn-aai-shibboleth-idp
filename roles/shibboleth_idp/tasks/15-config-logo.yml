@@ -36,6 +36,7 @@
     mode: 0755
 
 - name: add favicon for IdP
+  when: "'files/favicon.ico' is file"
   copy:
     src: files/favicon.ico
     dest: /opt/shibboleth-idp/htdocs/favicon.ico
