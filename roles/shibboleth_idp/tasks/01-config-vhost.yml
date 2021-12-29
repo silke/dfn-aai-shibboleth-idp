@@ -162,4 +162,6 @@
   command: "a2ensite {{ idp_fqdn }}.conf"
   args:
     chdir: /etc/apache2/sites-available
+  register: enable_vhost
+  changed_when: "'already enabled' not in enable_vhost.stdout"
   notify: restart apache
