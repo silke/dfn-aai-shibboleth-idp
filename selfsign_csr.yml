@@ -1,0 +1,35 @@
+- hosts: all
+  connection: local
+  become: false
+  vars:
+    ca_path: "files/ownca"
+    ca_key: "{{ ca_path + '/ca-certificate.key' }}"
+    ca_cert: "{{ ca_path + '/ca-certificate.pem' }}"
+    ca_passphrase: "{{
+      lookup('password',
+      'credentials/' + '/owncapassword length=32')
+    }}"  # creates a password in a directory explicitly ignored by git
+    idp_role_path: "roles/shibboleth_idp"
+
+  tasks:
+
+    - name: load vars from idp role
+      ansible.builtin.include_vars:
+        file: "{{ idp_role_path }}/vars/main.yml"
+
+    - name: sign webserver certificate
+      community.crypto.x509_certificate:
+        csr_path: "{{ inventory_hostname + idp_webserver_signing_request }}"
+        provider: ownca
+        ownca_path: "{{ ca_cert }}"
+        ownca_privatekey_path: "{{ ca_key }}"
+        ownca_privatekey_passphrase: "{{ ca_passphrase }}"
+        ownca_not_after: "+30d"  # valid for 30 days, it's a test certificate!
+        ownca_not_before: "-1d"  # valid since yesterday
+        path: "{{ idp_webserver_certificate | basename }}"
+
+    - name: add the root certificate to the role
+      copy:
+        src: "{{ ca_cert }}"
+        dest: "root_certificates/ownca.pem"
+        mode: 0644

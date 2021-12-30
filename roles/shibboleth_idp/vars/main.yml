@@ -37,3 +37,32 @@ idp_archive_checksum_url: "{{
 idp_keys_url: "{{
   'https://shibboleth.net/downloads/PGP_KEYS'
 }}"
+
+
+# certificate basename depends on hostname to support multiple hosts
+idp_webserver_basename: "{{ idp_fqdn }}_{{ inventory_hostname }}"
+idp_webserver_privatekey: "{{
+  '/etc/ssl/private/' +
+  idp_webserver_basename +
+  '.key.pem'
+}}"
+idp_webserver_certificate: "{{
+  '/etc/ssl/localcerts/' +
+  idp_webserver_basename +
+  '.crt.pem'
+}}"
+idp_webserver_signing_request: "{{
+  '/etc/ssl/csr/' +
+  idp_webserver_basename +
+  '.csr'
+}}"
+idp_webserver_fullchain: "{{
+  '/etc/ssl/localcerts/' +
+  idp_webserver_basename +
+  '_completechain.crt.pem'
+}}"
+
+# TODO Check how this should be handled in federating system
+idp_saml_privatekey: "/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
+idp_saml_certificate: "/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
+idp_saml_signing_request: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"

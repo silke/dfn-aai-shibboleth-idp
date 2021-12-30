@@ -1,7 +1,7 @@
 # How to use this repo to install a Shibboleth Identity Provider
 
 ## USE AT YOUR OWN RISK!!!
-You can use this Ansible playbook to install a Shibboleth IdP according to the [DFN-AAI online documentation](https://doku.tid.dfn.de/de:shibidp:uebersicht). However, you do this at your own risk! 
+You can use this Ansible playbook to install a Shibboleth IdP according to the [DFN-AAI online documentation](https://doku.tid.dfn.de/de:shibidp:uebersicht). However, you do this at your own risk!
 
 **Please be aware of the fact that the DFN-AAI team is not responsible for any issues caused by this playbook. You still have to understand what your IdP does and you have to take care of securing your server as needed.**
 
@@ -29,7 +29,9 @@ mysql_secure_installation
 ansible-galaxy collection install community.crypto
 ansible-galaxy collection install community.mysql
 ```
-* Get a certificate for the webserver, e.g. from DFN-PKI. (For SAML communication this playbook will generate a selfsigned certificate for you.)
+* A certificate for the webserver can be generated using the CSR the role produces on the first run.
+  The certificate authority of your choosing, e.g. DFN-PKI, will create the certificate for you.
+  (For SAML communication this playbook will generate a selfsigned certificate for you.)
 
 ## Getting started
 * Clone this repository.

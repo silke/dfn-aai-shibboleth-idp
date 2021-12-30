@@ -10,7 +10,6 @@ institution_desc_de: "Identity Provider Beispiel Uni"
 institution_desc_en: "Identity Provider Example Uni"
 idp_fqdn: "idp.example.org"
 entity_id: "https://idp.example.org/idp/shibboleth"
-webserver_key: "{{ vault_webserver_key }}"
 
 # For MariaDB database:
 database_host: localhost
@@ -20,8 +19,3 @@ database_admin_password: "{{ vault_database_admin_password}}"
 database_name: "idp"
 database_user: "idp"
 database_password: "{{ vault_database_password }}"
-
-webserver_cert: |
-  -----BEGIN CERTIFICATE-----
-  insert your DFN-PKI cert for the webserver here
-  -----END CERTIFICATE-----

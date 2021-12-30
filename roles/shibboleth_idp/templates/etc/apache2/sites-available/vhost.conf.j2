@@ -14,8 +14,8 @@
         Header always set Strict-Transport-Security "max-age=63072000"
     </IfModule>
 
-    SSLCertificateFile      /etc/ssl/localcerts/{{ idp_fqdn }}.crt.pem
-    SSLCertificateKeyFile   /etc/ssl/private/{{ idp_fqdn }}.key.pem
+    SSLCertificateFile      {{ idp_webserver_fullchain }}
+    SSLCertificateKeyFile   {{ idp_webserver_privatekey }}
 
     <Location /idp>
         Require all granted
@@ -50,8 +50,8 @@
         Header always set Strict-Transport-Security "max-age=63072000"
     </IfModule>
 
-    SSLCertificateFile      /etc/ssl/localcerts/{{ idp_fqdn }}.crt.pem
-    SSLCertificateKeyFile   /etc/ssl/private/{{ idp_fqdn }}.key.pem
+    SSLCertificateFile      {{ idp_webserver_fullchain }}
+    SSLCertificateKeyFile   {{ idp_webserver_privatekey }}
 
     <Location /idp>
         Require all granted

@@ -20,7 +20,7 @@
 
 - name: generate private key for self-signed SAML certificate
   community.crypto.openssl_privatekey:
-    path: "/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
+    path: "{{ idp_saml_privatekey }}"
     owner: root
     group: ssl-cert
     mode: 0640
@@ -30,21 +30,20 @@
 # force regeneration with force: true
 - name: generate certificate signing request
   community.crypto.openssl_csr:
-    path: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"
-    privatekey_path: "{{ saml_privatekey['filename'] }}"
+    path: "{{ idp_saml_signing_request }}"
+    privatekey_path: "{{ idp_saml_privatekey }}"
     country_name: "{{ openssl_country_name }}"
     organization_name: "{{ openssl_org_name }}"
     organizational_unit_name: "{{ openssl_org_unit }}"
     email_address: "{{ openssl_email_address }}"
     common_name: "{{ idp_fqdn }}"
     backup: true
-  register: saml_certificatesigningrequest
 
 - name: sign the csr
   community.crypto.x509_certificate:
-    path: "/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
-    privatekey_path: "{{ saml_privatekey['filename'] }}"
-    csr_path: "{{ saml_certificatesigningrequest['filename'] }}"
+    path: "{{ idp_saml_certificate }}"
+    privatekey_path: "{{ idp_saml_privatekey }}"
+    csr_path: "{{ idp_saml_signing_request }}"
     selfsigned_not_before: "+0s"
     selfsigned_not_after: "{{ selfsigned_not_after }}"
     provider: selfsigned

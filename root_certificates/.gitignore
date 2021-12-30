@@ -1,0 +1,2 @@
+# Ignore selfsigning CA
+ownca.pem

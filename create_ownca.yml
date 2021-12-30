@@ -1,0 +1,48 @@
+---
+- hosts: localhost
+  connection: local
+  become: false
+  tasks:
+    - name: create own ca
+      # this is mainly inspired by https://docs.ansible.com/ansible/latest/collections/community/crypto/docsite/guide_ownca.html
+      vars: &ca_vars
+        ca_path: "files/ownca"
+        ca_key: "{{ ca_path + '/ca-certificate.key' }}"
+        ca_cert: "{{ ca_path + '/ca-certificate.pem' }}"
+        ca_passphrase: "{{ lookup('password', 'credentials/' + '/owncapassword length=32') }}"  # creates a password in a directory explicitly ignored by git
+
+      block:
+
+        - name: create directories
+          file:
+            path: "{{ ca_path }}"
+            state: directory
+            mode: 0750
+
+        - name: create key for ca
+          community.crypto.openssl_privatekey:
+            path: "{{ ca_key }}"
+            passphrase: "{{ ca_passphrase }}"
+            cipher: "auto"
+
+        - name: create csr for ca certificate
+          community.crypto.openssl_csr_pipe:
+            privatekey_path: "{{ ca_key }}"
+            privatekey_passphrase: "{{ ca_passphrase }}"
+            common_name: "Development CA for dfn-aai-shibboleth-idp"
+            use_common_name_for_san: false  # since we do not specify SANs, don't use CN as a SAN
+            basic_constraints:
+              - 'CA:TRUE'
+            basic_constraints_critical: true
+            key_usage:
+              - keyCertSign
+            key_usage_critical: true
+          register: ca_csr
+
+        - name: create certificate for ca from csr
+          community.crypto.x509_certificate:
+            path: "{{ ca_cert }}"
+            csr_content: "{{ ca_csr.csr }}"
+            privatekey_path: "{{ ca_key }}"
+            privatekey_passphrase: "{{ ca_passphrase }}"
+            provider: selfsigned
