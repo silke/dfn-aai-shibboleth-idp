@@ -47,10 +47,23 @@ echo "vault-password.txt" >> .gitignore
   * inventory/group_vars/production/vault
 * Add two files named logo.png and favicon.ico to the folder `roles/shibboleth-idp/files`.
 * Run it! The whole playbook consists of different roles, tasks and subtasks that you can run independently. Refer to the group (test oder production in this case) with the ''-l'' parameter.
-  * To install and configure Tomcat, Apache and Shibboleth IdP in one go run ```ansible-playbook -i inventory/hosts site.yml -l test --tags shibboleth_idp```. The role shibboleth-idp will automatically run the tomcat and apache roles.
-  * To run an individual role: ```ansible-playbook -i inventory/hosts site.yml -l test --tags tomcat```
-  * To (re-)run parts of the subtasks in the shibboleth-idp role, e.g. the LDAP configuration: ```ansible-playbook -i inventory/hosts site.yml -l test --tags config-ldap```
-  * To change attribute-resolver.xml or attribute-filter.xml: ```ansible-playbook -i inventory/hosts site.yml -l test --tags config-attributes```
+  * To install and configure Tomcat, Apache and Shibboleth IdP in one go run
+  ```sh
+  ansible-playbook -i inventory/hosts site.yml -l test --tags shibboleth_idp
+  ```
+  The role shibboleth-idp will automatically run the tomcat and apache roles.
+  * To run an individual role:
+  ```sh
+  ansible-playbook -i inventory/hosts site.yml -l test --tags tomcat
+  ```
+  * To (re-)run parts of the subtasks in the shibboleth-idp role, e.g. the LDAP configuration:
+  ```sh
+  ansible-playbook -i inventory/hosts site.yml -l test --tags config-ldap
+  ```
+  * To change attribute-resolver.xml or attribute-filter.xml:
+  ```sh
+  ansible-playbook -i inventory/hosts site.yml -l test --tags config-attributes
+  ```
 
 ## Testing the new IdP
 * Verify the IdP status page: https://YOUR-FQDN/idp/status
@@ -63,4 +76,4 @@ echo "vault-password.txt" >> .gitignore
 * The Login and Logout pages have not been adapted.
 * No cronjob are added - backup of user consent information is not included.
 * Private IP addresses may cause issues in the webserver configuration. Adapt the according template to your needs.
-* If you haven't activated local metadata for your institution in our metadata administration tool or if your local metadata file is still empty add a comment to the line ```metadata_local:``` in ```inventory/group_vars/all/vars```. Otherwise you will get a faulty ```/opt/shibboleth-idp/conf/metadata-providers.xml``` file in your IdP.
+* If you haven't activated local metadata for your institution in our metadata administration tool or if your local metadata file is still empty add a comment to the line `metadata_local:` in `inventory/group_vars/all/vars`. Otherwise you will get a faulty `/opt/shibboleth-idp/conf/metadata-providers.xml` file in your IdP.
