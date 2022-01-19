@@ -1,0 +1,6 @@
+# Ignore the dedicated directory for holding credentials
+credentials/*
+
+# Ignore certificates and csrs
+*.crt.pem
+*.csr
