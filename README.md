@@ -68,7 +68,7 @@ echo "vault-password.txt" >> .gitignore
 **IT WILL "FAIL" ON THE FIRST RUN! This is expected as you need your certificate authority to sign the CSR it generates for you.**
 
 For development purposes you can create a local certificate authority as follows:
-````sh
+```sh
 ansible-playbook setup_dev.yml
 ```
 
