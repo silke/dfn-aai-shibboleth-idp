@@ -65,6 +65,18 @@ echo "vault-password.txt" >> .gitignore
   ansible-playbook -i inventory/hosts site.yml -l test --tags config-attributes
   ```
 
+**IT WILL "FAIL" ON THE FIRST RUN! This is expected as you need your certificate authority to sign the CSR it generates for you.**
+
+For development purposes you can create a local certificate authority as follows:
+````sh
+ansible-playbook setup_dev.yml
+```
+
+Signing your CSR is then done as follows:
+```sh
+ansible-playbook selfsign_csr.yml
+```
+
 ## Testing the new IdP
 * Verify the IdP status page: https://YOUR-FQDN/idp/status
 * Go to DFN-AAI metadata administration, create a new IdP and enter the EntityID (https://YOURFQDN/idp/shibboleth) to query all metadata from the system. Check if it looks good and save the form. There is no need to change the certificate. Ansible generated a SAML certificate for your IdP and it was imported to the metadata administration in the first go.
