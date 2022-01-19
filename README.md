@@ -45,7 +45,7 @@ echo "vault-password.txt" >> .gitignore
   * inventory/group_vars/all/vault
   * inventory/group_vars/test/vault
   * inventory/group_vars/production/vault
-* Add two files named logo.png and favicon.ico to the folder ```roles/shibboleth-idp/files```.
+* Add two files named logo.png and favicon.ico to the folder `roles/shibboleth-idp/files`.
 * Run it! The whole playbook consists of different roles, tasks and subtasks that you can run independently. Refer to the group (test oder production in this case) with the ''-l'' parameter.
   * To install and configure Tomcat, Apache and Shibboleth IdP in one go run ```ansible-playbook -i inventory/hosts site.yml -l test --tags shibboleth_idp```. The role shibboleth-idp will automatically run the tomcat and apache roles.
   * To run an individual role: ```ansible-playbook -i inventory/hosts site.yml -l test --tags tomcat```
