@@ -24,7 +24,7 @@ mysql_secure_installation
 ```
 * Install Ansible on the machine you want to run the playbook from.
 * A certificate for the webserver can be generated using the CSR the role produces on the first run.
-  The certificate authority of your choosing, e.g. DFN-PKI, will create the certificate for you.
+  The certificate authority of your choice, e.g. DFN-PKI, will create the certificate for you.
   (For SAML communication this playbook will generate a selfsigned certificate for you.)
 
 ## Getting started
