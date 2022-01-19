@@ -23,12 +23,6 @@ apt install mariadb-server mariadb-client libmariadb-java
 mysql_secure_installation
 ```
 * Install Ansible on the machine you want to run the playbook from.
-* Install the following community collections:
-
-```
-ansible-galaxy collection install community.crypto
-ansible-galaxy collection install community.mysql
-```
 * A certificate for the webserver can be generated using the CSR the role produces on the first run.
   The certificate authority of your choosing, e.g. DFN-PKI, will create the certificate for you.
   (For SAML communication this playbook will generate a selfsigned certificate for you.)
