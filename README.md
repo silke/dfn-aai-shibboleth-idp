@@ -77,6 +77,8 @@ Signing your CSR is then done as follows:
 ansible-playbook selfsign_csr.yml
 ```
 
+**If you insist on providing your own private key and certificate, you need to add `--tags=all,shibboleth_own_key` to your ansible invocation.**
+
 ## Testing the new IdP
 * Verify the IdP status page: https://YOUR-FQDN/idp/status
 * Go to DFN-AAI metadata administration, create a new IdP and enter the EntityID (https://YOURFQDN/idp/shibboleth) to query all metadata from the system. Check if it looks good and save the form. There is no need to change the certificate. Ansible generated a SAML certificate for your IdP and it was imported to the metadata administration in the first go.
