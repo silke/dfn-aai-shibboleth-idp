@@ -20,6 +20,7 @@ statuspage_dfn_ipv6: "2001:638:206:1::/64"
 
 idp_archive_url: "{{
   'https://shibboleth.net/downloads/identity-provider/' +
+  'archive/' +
   shibboleth_idp_version +
   '/shibboleth-identity-provider-' +
   shibboleth_idp_version +
