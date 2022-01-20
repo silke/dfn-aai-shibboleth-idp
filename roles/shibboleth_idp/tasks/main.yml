@@ -1,4 +1,9 @@
 ---
+- import_tasks: 00-copy-provided-certificate.yml
+  tags:
+    - never
+    - shibboleth_own_key
+
 - import_tasks: 01-config-vhost.yml
   tags: config-vhost
 
