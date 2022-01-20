@@ -25,7 +25,13 @@ mysql_secure_installation
 * Install Ansible on the machine you want to run the playbook from.
 * A certificate for the webserver can be generated using the CSR the role produces on the first run.
   The certificate authority of your choice, e.g. DFN-PKI, will create the certificate for you.
-  (For SAML communication this playbook will generate a selfsigned certificate for you.)
+  For SAML communication this playbook will generate a selfsigned certificate with a validity of three years for you.
+
+## Certificates
+* Installed with this playbook, your IdP will use **different certificates for the webserver and for SAML communication**.
+* For SAML communication this playbook will generate a selfsigned certificate with a validity of three years for you.
+* For the webserver certificate, the playbook generates a private key and a CSR for you on first run. **THUS, IT WILL "FAIL" ON FIRST RUN! This is expected as you need your certificate authority to sign the CSR it generates for you.** Save the certificate in the directory you cloned the repository into. Rename the file to reflect you IdP and the server's FQDN like so: IDPVIRTUALHOST_MACHINEFQDN.crt.pem, e.g. idp.example.org_machine.some.fqdn.crt.pem. Run the playbook again. The rationale behind this procedure is to keep the private key only on the machine that needs it.
+* If you insist on providing your own existing private key and certificate, save both files in the local folder you cloned the repository into. Rename them to IDPVIRTUALHOST_MACHINEFQDN.crt.pem and IDPVIRTUALHOST_MACHINEFQDN.key.pem, e.g. idp.example.org_machine.some.fqdn.crt.pem and idp.example.org_machine.some.fqdn.key.pem and add `--tags=all,shibboleth_own_key` to your ansible invocation. Note that it is not recommended to keep your private key in that location!
 
 ## Getting started
 * Clone this repository.
@@ -65,8 +71,6 @@ echo "vault-password.txt" >> .gitignore
   ansible-playbook -i inventory/hosts site.yml -l test --tags config-attributes
   ```
 
-**IT WILL "FAIL" ON THE FIRST RUN! This is expected as you need your certificate authority to sign the CSR it generates for you.**
-
 For development purposes you can create a local certificate authority as follows:
 ```sh
 ansible-playbook setup_dev.yml
@@ -76,8 +80,6 @@ Signing your CSR is then done as follows:
 ```sh
 ansible-playbook selfsign_csr.yml
 ```
-
-**If you insist on providing your own private key and certificate, you need to add `--tags=all,shibboleth_own_key` to your ansible invocation.**
 
 ## Testing the new IdP
 * Verify the IdP status page: https://YOUR-FQDN/idp/status
