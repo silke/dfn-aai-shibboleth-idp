@@ -10,7 +10,7 @@ openssl_org_unit: "Your department for certificate"
 openssl_email_address: "Mail address for certificate"
 
 institution_website: "https://example.org"
-copyright_year: "2021"
+copyright_year: "2022"
 url_helpdesk: "https://example.org"
 url_imprint: "https://example.org/imprint"
 url_privacy: "https://example.org/privacy"
