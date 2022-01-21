@@ -18,7 +18,7 @@
         path: /opt/shibboleth-idp/conf/access-control.xml
         xpath: "{{ idp_access_policies_entry_xpath }}[@key='StatusAccessByIPAddress']"
         pretty_print: true
-        namespaces: "{{ idp_access_namespaces }}"
+        namespaces: "{{ idp_xml_namespaces }}"
         attribute: p:allowedRanges
         value: >-
            \#{ {
@@ -38,7 +38,7 @@
         path: /opt/shibboleth-idp/conf/access-control.xml
         xpath: "{{ idp_access_policies_entry_xpath }}[@key='AccessByIPAddress']"
         pretty_print: true
-        namespaces: "{{ idp_access_namespaces }}"
+        namespaces: "{{ idp_xml_namespaces }}"
         attribute: p:allowedRanges
         value: >-
            \#{ {

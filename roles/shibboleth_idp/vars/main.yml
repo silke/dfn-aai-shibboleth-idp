@@ -68,7 +68,7 @@ idp_saml_privatekey: "/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
 idp_saml_certificate: "/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
 idp_saml_signing_request: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"
 
-idp_access_namespaces:
+idp_xml_namespaces:
   beans: "http://www.springframework.org/schema/beans"
   util: "http://www.springframework.org/schema/util"
   context: "http://www.springframework.org/schema/context"
@@ -78,3 +78,5 @@ idp_access_namespaces:
 
 idp_access_policies_xpath: "/beans:beans/util:map[@id='shibboleth.AccessControlPolicies']"
 idp_access_policies_entry_xpath: "{{ idp_access_policies_xpath }}/beans:entry"
+
+idp_intercept_policies_xpath: "/beans:beans/util:map[@id='shibboleth.AccessControlPolicies']"
