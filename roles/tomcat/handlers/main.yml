@@ -1,6 +1,6 @@
 ---
 - name: restart tomcat
-  service: name=tomcat state=restarted enabled=yes
+  ansible.builtin.service: name=tomcat state=restarted enabled=yes
 
 - name: daemon-reload
-  service: name=systemd daemon-reload=yes
+  ansible.builtin.service: name=systemd daemon-reload=yes
