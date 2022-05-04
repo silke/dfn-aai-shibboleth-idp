@@ -16,7 +16,7 @@
     }}
   loop_control:
     loop_var: brand_image
-  copy:
+  ansible.builtin.copy:
     src: "{{ brand_image }}"
     dest: "{{
       '/opt/shibboleth-idp/edit-webapp/images/' +
@@ -28,7 +28,7 @@
   notify: rebuild war file
 
 - name: add directory htdocs
-  file:
+  ansible.builtin.file:
     path: /opt/shibboleth-idp/htdocs
     state: directory
     owner: root
@@ -37,7 +37,7 @@
 
 - name: add favicon for IdP
   when: "'files/favicon.ico' is file"
-  copy:
+  ansible.builtin.copy:
     src: files/favicon.ico
     dest: /opt/shibboleth-idp/htdocs/favicon.ico
     owner: root
@@ -45,7 +45,7 @@
     mode: 0644
 
 - name: create robots.txt, avoid errors from for search engines
-  template:
+  ansible.builtin.template:
     src: templates/opt/shibboleth-idp/htdocs/robots.txt.j2
     dest: /opt/shibboleth-idp/htdocs/robots.txt
     owner: root

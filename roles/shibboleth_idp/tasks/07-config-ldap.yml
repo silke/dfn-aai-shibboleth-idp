@@ -1,6 +1,6 @@
 ---
 - name: configure ldap.properties
-  template:
+  ansible.builtin.template:
     src: templates/opt/shibboleth-idp/conf/ldap.properties.j2
     dest: /opt/shibboleth-idp/conf/ldap.properties
     owner: root
@@ -8,7 +8,7 @@
     mode: 0755
 
 - name: configure LDAP password
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/credentials/secrets.properties
     regexp: "^idp.authn.LDAP.bindDNCredential"
     line: "idp.authn.LDAP.bindDNCredential = {{ ldap_bindpw }}"

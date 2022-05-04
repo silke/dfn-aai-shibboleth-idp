@@ -1,7 +1,7 @@
 ---
 ### metadata/idp-metadata.xml ###
 - name: link self signed certificate in idp.properties
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/idp.properties
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
@@ -19,7 +19,7 @@
 - name: create idp-metadata.xml for DFN-AAI metadata administration tool
   vars:
     samlcert_content: "{{ saml_certificate['certificate'] }}"
-  template:
+  ansible.builtin.template:
     src: templates/opt/shibboleth-idp/metadata/idp-metadata.xml.j2
     dest: /opt/shibboleth-idp/metadata/idp-metadata.xml
     owner: root
@@ -27,14 +27,14 @@
     mode: 0644
 
 - name: fetch certificate to validate MDQ
-  get_url:
+  ansible.builtin.get_url:
     url: https://www.aai.dfn.de/fileadmin/metadata/dfn-aai-mdq.pem
     dest: /etc/ssl/aai/dfn-aai-mdq.pem
     # checksum of file on DFN server (not fingerprint on website)
     checksum: "{{ mdq_checksum }}"
 
 - name: add metadata providers
-  template:
+  ansible.builtin.template:
     src: templates/opt/shibboleth-idp/conf/metadata-providers.xml.j2
     dest: /opt/shibboleth-idp/conf/metadata-providers.xml
     owner: root

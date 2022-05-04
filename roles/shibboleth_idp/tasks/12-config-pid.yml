@@ -1,31 +1,31 @@
 ---
 # configuration of how persistentIds are generated
 - name: configure persistentId source attribute
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/saml-nameid.properties
     regexp: "idp.persistentId.sourceAttribute"
     line: "idp.persistentId.sourceAttribute = {{ persistent_id_source_attr }}"
 
 - name: configure persistentId generator
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/saml-nameid.properties
     regexp: "idp.persistentId.generator"
     line: "idp.persistentId.generator = shibboleth.StoredPersistentIdGenerator"
 
 - name: configure database as persistentId data source
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/saml-nameid.properties
     regexp: "idp.persistentId.dataSource"
     line: "idp.persistentId.dataSource = shibboleth.MySQLDataSource"
 
 - name: write salt into credentials file
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/credentials/secrets.properties
     regexp: "idp.persistentId.salt"
     line: "idp.persistentId.salt = {{ persistent_id_salt }}"
 
 - name: turn on the generation of persistentIds
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /opt/shibboleth-idp/conf/saml-nameid.xml
     block: |
       <!-- Uncommenting this bean requires configuration in saml-nameid.properties. -->
@@ -34,13 +34,13 @@
     insertafter: '<util:list id="shibboleth.SAML2NameIDGenerators">'
 
 - name: and yet another pid config file
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/c14n/subject-c14n.xml
     regexp: '\<ref bean\=\"c14n\/SAML2Persistent" />'
     line: '<ref bean="c14n/SAML2Persistent" />'
 
 - name: make all user identifiers lowercase
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/c14n/subject-c14n.properties
     regexp: "idp.c14n.simple.lowercase"
     line: "idp.c14n.simple.lowercase = true"

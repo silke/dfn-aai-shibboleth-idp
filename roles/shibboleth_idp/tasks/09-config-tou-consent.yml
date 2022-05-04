@@ -3,7 +3,7 @@
   block:
 
     - name: check if the intercept consent module is enabled
-      command: "bin/module.sh --test idp.intercept.Consent"
+      ansible.builtin.command: "bin/module.sh --test idp.intercept.Consent"
       args:
         chdir: /opt/shibboleth-idp
       register: idp_intercept_consent_status
@@ -12,14 +12,14 @@
   rescue:
 
     - name: enable the intercept consent module
-      command: "bin/module.sh --enable idp.intercept.Consent"
+      ansible.builtin.command: "bin/module.sh --enable idp.intercept.Consent"
       args:
         chdir: /opt/shibboleth-idp
       register: idp_intercept_consent_enable
       failed_when: "'[FAILED]' in idp_intercept_consent_enable.stdout"
 
 - name: correct file permissions
-  file:
+  ansible.builtin.file:
     path: /opt/shibboleth-idp/conf/intercept/consent-intercept-config.xml
     state: file
     owner: root
@@ -27,7 +27,7 @@
     mode: 0755
 
 - name: modify consent intercept configuration
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /opt/shibboleth-idp/conf/intercept/consent-intercept-config.xml
     block: |
       <bean id="shibboleth.consent.terms-of-use.Key" class="com.google.common.base.Functions" factory-method="constant">
@@ -37,7 +37,7 @@
     insertbefore: "<!-- Attribute Release configuration -->"
 
 - name: template for relying-party.xml
-  template:
+  ansible.builtin.template:
     src: templates/opt/shibboleth-idp/conf/relying-party.xml.j2
     dest: /opt/shibboleth-idp/conf/relying-party.xml
     owner: root
@@ -45,7 +45,7 @@
     mode: 0755
 
 - name: Add link to terms of use in footer
-  copy:
+  ansible.builtin.copy:
     dest: /opt/shibboleth-idp/edit-webapp/tou.jsp
     content: |
       <%@ page pageEncoding="UTF-8" %>
