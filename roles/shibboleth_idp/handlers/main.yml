@@ -1,25 +1,25 @@
 ---
 - name: restart tomcat
-  service:
+  ansible.builtin.service:
     name: tomcat9
     state: restarted
 
 - name: restart apache
-  service:
+  ansible.builtin.service:
     name: apache2
     state: restarted
 
 - name: rebuild war file
   environment:
     JAVA_HOME: "/usr"
-  command:
+  ansible.builtin.command:
     argv:
       - "./bin/build.sh"
       - "-Didp.target.dir=/opt/shibboleth-idp"
     chdir: "/opt/shibboleth-idp"
 
 - name: reload instance
-  file:
+  ansible.builtin.file:
     path: "/opt/shibboleth-idp/war/idp.war"
     state: touch
     owner: root
