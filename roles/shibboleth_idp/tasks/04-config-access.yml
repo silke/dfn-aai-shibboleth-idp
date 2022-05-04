@@ -19,22 +19,26 @@
 - name: configure access to status page for own and DFN monitoring IP ranges with ipv6
   blockinfile:
     path: /opt/shibboleth-idp/conf/access-control.xml
+    # yamllint disable rule:line-length
     block: |
       <entry key="StatusAccessByIPAddress">
           <bean parent="shibboleth.IPRangeAccessControl" p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}', '{{ statuspage_ipv6 }}', '193.174.247.0/24', '194.95.243.0/24', '194.95.244.0/24', '194.95.242.0/24'} }" />
       </entry>
     insertbefore: "</util:map>"
+    # yamllint enable rule:line-length
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   when: idp_ipv6 is defined
 
 - name: configure access to status page for own and DFN monitoring IP ranges without ipv6
   blockinfile:
     path: /opt/shibboleth-idp/conf/access-control.xml
+    # yamllint disable rule:line-length
     block: |
       <entry key="StatusAccessByIPAddress">
           <bean parent="shibboleth.IPRangeAccessControl" p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}', '193.174.247.0/24', '194.95.243.0/24', '194.95.244.0/24', '194.95.242.0/24'} }" />
       </entry>
     insertbefore: "</util:map>"
+    # yamllint enable rule:line-length
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   when: idp_ipv6 is undefined
 
