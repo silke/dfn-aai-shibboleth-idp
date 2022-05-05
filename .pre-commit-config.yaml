@@ -7,3 +7,9 @@ repos:
         files: \.(yaml|yml)$
         args:
           - "--progressive"
+
+  - repo: https://github.com/thibaudcolas/curlylint
+    rev: "v0.13.1" # select a tag / sha to point at
+    hooks:
+      - id: curlylint
+        files: \.(j2)$
