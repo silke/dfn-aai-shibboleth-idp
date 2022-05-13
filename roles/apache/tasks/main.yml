@@ -9,6 +9,8 @@
   ansible.builtin.service:
     name: apache2
     enabled: true
+  tags:
+    - notest
 
 - name: load apache modules
   community.general.apache2_module:
