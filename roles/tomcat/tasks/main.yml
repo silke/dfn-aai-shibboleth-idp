@@ -3,6 +3,7 @@
   ansible.builtin.apt:
     name: ['ntp', 'openjdk-11-jdk-headless', 'tomcat9', 'libtaglibs-standard-impl-java']
     state: present
+    update_cache: true
 
 - name: give tomcat enough memory
   ansible.builtin.lineinfile:
