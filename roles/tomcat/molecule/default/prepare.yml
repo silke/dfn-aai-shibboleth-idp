@@ -1,0 +1,8 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: "Fix missing man directory"
+      ansible.builtin.file:
+        path: /usr/share/man/man1
+        state: directory
