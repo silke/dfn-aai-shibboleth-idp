@@ -14,3 +14,13 @@ Add the changes to the repository and commit them with an appropriate commit mes
 git add ansible_collections
 git commit -m "Update collections"
 ```
+
+## Testing the roles
+
+Change into each role-directory and run
+
+```sh
+molecule test
+```
+
+to test the default scenario.
