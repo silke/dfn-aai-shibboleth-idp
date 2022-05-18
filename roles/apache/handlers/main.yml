@@ -1,3 +1,13 @@
 ---
 - name: restart apache
   ansible.builtin.service: name=apache2 state=restarted
+  service: name=apache2 state=restarted
+  when: >
+    not (
+      lookup('env', 'MOLECULE_DRIVER_NAME')
+      and
+      (
+        lookup('env', 'MOLECULE_DRIVER_NAME') |
+        lower ) in [ 'docker' ]
+
+      )
