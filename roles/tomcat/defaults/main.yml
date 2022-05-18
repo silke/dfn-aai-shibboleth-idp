@@ -1,0 +1,4 @@
+---
+# defaults file for role "tomcat"
+tomcat_idp_servlet_config_path: /etc/tomcat9/Catalina/localhost/idp.xml
+tomcat_group: tomcat

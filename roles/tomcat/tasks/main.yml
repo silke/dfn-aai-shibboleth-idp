@@ -84,9 +84,20 @@
     line: 'common.loader="${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar","/usr/share/java/*.jar"'
 
 - name: prepare configuration for IdP servlet
-  ansible.builtin.template:
-    src: templates/etc/tomcat9/Catalina/localhost/idp.xml.j2
-    dest: /etc/tomcat9/Catalina/localhost/idp.xml
-    owner: root
-    group: tomcat
-    mode: 0644
+  block:
+
+    - name: ensure configuration directory exists
+      ansible.builtin.file:
+        path: "{{ tomcat_idp_servlet_config_path | dirname }}"
+        state: directory
+        owner: root
+        group: "{{ tomcat_group }}"
+        mode: 0755
+
+    - name: create configuration
+      ansible.builtin.template:
+        src: templates/etc/tomcat9/Catalina/localhost/idp.xml.j2
+        dest: "{{ tomcat_idp_servlet_config_path }}"
+        owner: root
+        group: "{{ tomcat_group }}"
+        mode: 0644
