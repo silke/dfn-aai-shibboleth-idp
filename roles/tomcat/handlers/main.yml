@@ -1,6 +1,24 @@
 ---
 - name: restart tomcat
   ansible.builtin.service: name=tomcat state=restarted enabled=yes
+  when: >
+    not (
+      lookup('env', 'MOLECULE_DRIVER_NAME')
+      and
+      (
+        lookup('env', 'MOLECULE_DRIVER_NAME') |
+        lower ) in [ 'docker' ]
+
+      )
 
 - name: daemon-reload
   ansible.builtin.service: name=systemd daemon-reload=yes
+  when: >
+    not (
+      lookup('env', 'MOLECULE_DRIVER_NAME')
+      and
+      (
+        lookup('env', 'MOLECULE_DRIVER_NAME') |
+        lower ) in [ 'docker' ]
+
+      )

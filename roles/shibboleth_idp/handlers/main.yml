@@ -3,11 +3,29 @@
   ansible.builtin.service:
     name: tomcat9
     state: restarted
+  when: >
+    not (
+      lookup('env', 'MOLECULE_DRIVER_NAME')
+      and
+      (
+        lookup('env', 'MOLECULE_DRIVER_NAME') |
+        lower ) in [ 'docker' ]
+
+      )
 
 - name: restart apache
   ansible.builtin.service:
     name: apache2
     state: restarted
+  when: >
+    not (
+      lookup('env', 'MOLECULE_DRIVER_NAME')
+      and
+      (
+        lookup('env', 'MOLECULE_DRIVER_NAME') |
+        lower ) in [ 'docker' ]
+
+      )
 
 - name: rebuild war file
   environment:
