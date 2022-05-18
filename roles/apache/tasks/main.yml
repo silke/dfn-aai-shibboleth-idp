@@ -1,16 +1,16 @@
 ---
 - name: install packages
-  apt:
+  ansible.builtin.apt:
     name: ['apache2']
     state: present
 
 - name: make sure apache is enabled
-  service:
+  ansible.builtin.service:
     name: apache2
     enabled: true
 
 - name: load apache modules
-  apache2_module:
+  community.general.apache2_module:
     name: "{{ item }}"
     state: present
   loop:
@@ -25,7 +25,7 @@
   notify: restart apache
 
 - name: configure ports
-  template:
+  ansible.builtin.template:
     src: templates/etc/apache2/ports.conf.j2
     dest: /etc/apache2/ports.conf
     owner: root
@@ -33,7 +33,7 @@
     mode: 0644
 
 - name: configure SSL
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/apache2/mods-enabled/ssl.conf
     insertbefore: "</IfModule>"
     block: "{{
@@ -41,7 +41,7 @@
     }}"
 
 - name: ensure that the directories for ssl certs are present
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: root

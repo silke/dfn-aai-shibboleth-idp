@@ -1,17 +1,17 @@
 - name: install mariadb
-  apt:
+  ansible.builtin.apt:
     name: ['mariadb-server', 'mariadb-client', 'libmariadb-java', 'python3-pymysql']
     state: present
 
 - name: create symlink for tomcat
-  file:
+  ansible.builtin.file:
     src: /usr/share/java/mariadb-java-client.jar
     dest: /var/lib/tomcat9/lib/mariadb-java-client.jar
     state: link
   notify: restart tomcat
 
 - name: make sure mariadb is running
-  service:
+  ansible.builtin.service:
     name: mariadb
     state: started
 
@@ -44,7 +44,7 @@
   no_log: true
 
 - name: get mysqldumps for two database tables
-  copy:
+  ansible.builtin.copy:
     src: "{{ item }}"
     dest: /tmp
     owner: root
@@ -71,7 +71,7 @@
   no_log: true
 
 - name: configure database access via JPAStorageService
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /opt/shibboleth-idp/conf/global.xml
     block: |
       <bean id="shibboleth.MySQLDataSource"
@@ -109,7 +109,7 @@
   notify: restart tomcat
 
 - name: add database credentials to idp.properties
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /opt/shibboleth-idp/conf/idp.properties
     block: |
       mysql.class    = org.apache.tomcat.jdbc.pool.DataSource
@@ -118,7 +118,7 @@
     insertbefore: EOF
 
 - name: add database password to secrets.properties
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/credentials/secrets.properties
     regexp: "^mysql.password"
     line: mysql.password = {{ database_password }}

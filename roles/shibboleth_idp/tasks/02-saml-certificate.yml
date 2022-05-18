@@ -2,12 +2,12 @@
 # Generate a selfsigned OpenSSL certificate for SAML communication
 
 - name: make sure openssl and python-cryptography are installed
-  apt:
+  ansible.builtin.apt:
     name: ['openssl', 'python3-cryptography']
     state: present
 
 - name: ensure that the directories for ssl certs are present
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: root

@@ -1,31 +1,31 @@
 - name: get dfnEduPerson schema for attribute registry from DFN wiki
-  get_url:
+  ansible.builtin.get_url:
     url: https://download.aai.dfn.de/schema/dfnEduPerson.xml
     dest: /opt/shibboleth-idp/conf/attributes/dfnEduPerson.xml
   notify: reload instance
 
 - name: import dfnEduPerson schema
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/attributes/default-rules.xml
     line: <import resource="dfnEduPerson.xml" />
     insertafter: <import resource="eduPerson.xml" />
   notify: reload instance
 
 - name: get misc attributes form schac and ePTid from DFN-wiki
-  get_url:
+  ansible.builtin.get_url:
     url: https://download.aai.dfn.de/schema/dfnMisc.xml
     dest: /opt/shibboleth-idp/conf/attributes/dfnMisc.xml
   notify: reload instance
 
 - name: import dfnMisc attributes
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/attributes/default-rules.xml
     line: <import resource="dfnMisc.xml" />
     insertafter: <import resource="eduPerson.xml" />
   notify: reload instance
 
 - name: starter template for attribute-resolver.xml
-  template:
+  ansible.builtin.template:
     src: templates/opt/shibboleth-idp/conf/attribute-resolver.xml.j2
     dest: /opt/shibboleth-idp/conf/attribute-resolver.xml
     owner: root
@@ -34,7 +34,7 @@
   notify: reload instance
 
 - name: starter template for attribute-filter.xml
-  template:
+  ansible.builtin.template:
     src: templates/opt/shibboleth-idp/conf/attribute-filter.xml.j2
     dest: /opt/shibboleth-idp/conf/attribute-filter.xml
     owner: root

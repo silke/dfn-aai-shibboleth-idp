@@ -1,17 +1,17 @@
 ---
 # GPG is not installed by default on some APT based distributions
 - name: ensure that gpg is installed
-  apt:
+  ansible.builtin.apt:
     name: gpg
     state: present
 
 - name: install Tomcat MariaDB library
-  apt:
+  ansible.builtin.apt:
     name: libmariadb-java
     state: present
 
 - name: create directory for shibboleth downloads
-  file:
+  ansible.builtin.file:
     path: /opt/install
     state: directory
     owner: root
@@ -20,7 +20,7 @@
 
 # Download the Shibboleth version number given in group_vars/idphosts/vars
 - name: download the latest shibboleth-idp
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ item }}"
     dest: /opt/install
     force: false
@@ -30,14 +30,14 @@
     - "{{ idp_keys_url }}"
 
 - name: import the PGP key
-  command: gpg --import PGP_KEYS
+  ansible.builtin.command: gpg --import PGP_KEYS
   args:
     chdir: /opt/install
   register: import_pgp_keys
   changed_when: "'imported:' in import_pgp_keys.stdout"
 
 - name: verify the download
-  command: >
+  ansible.builtin.command: >
     gpg
     --verify
     shibboleth-identity-provider-{{ shibboleth_idp_version }}.tar.gz.asc
@@ -48,7 +48,7 @@
   changed_when: false
 
 - name: extract the archive if verified
-  unarchive:
+  ansible.builtin.unarchive:
     src: "{{
       '/opt/install/shibboleth-identity-provider-' +
       shibboleth_idp_version +
@@ -59,7 +59,7 @@
   when: verified_download is succeeded
 
 - name: make sure installation directory exists
-  file:
+  ansible.builtin.file:
     path: /opt/shibboleth-idp
     state: directory
     owner: root
@@ -67,7 +67,7 @@
     mode: 0755
 
 - name: merge.properties file for non-interactive installation
-  template:
+  ansible.builtin.template:
     src: templates/opt/shibboleth-idp/idp.merge.properties.j2
     dest: "/opt/shibboleth-idp/idp.merge.properties"
     owner: root
@@ -75,7 +75,7 @@
     mode: 0644
 
 - name: run the shibboleth installer
-  shell: >
+  ansible.builtin.shell: >
     JAVA_HOME=/usr
     {{ idp_installation_script }}
     {{
@@ -95,7 +95,7 @@
     creates: "{{ idp_ansible_indicator }}"
 
 - name: fix read permissions for tomcat group on conf and credentials
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: root
@@ -107,7 +107,7 @@
     - /opt/shibboleth-idp/credentials
 
 - name: fix ownership for tomcat user on metadata and logs
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: tomcat

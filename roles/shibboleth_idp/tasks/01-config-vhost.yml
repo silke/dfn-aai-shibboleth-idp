@@ -4,12 +4,12 @@
   block:
 
     - name: make sure openssl is installed
-      apt:
+      ansible.builtin.apt:
         name: openssl
         state: present
 
     - name: ensure that the directories for ssl certs are present
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         owner: root
@@ -22,7 +22,7 @@
         - /etc/ssl/csr
 
     - name: get certificate to validate signed metadata
-      get_url:
+      ansible.builtin.get_url:
         url: 'https://www.aai.dfn.de/fileadmin/metadata/dfn-aai.pem'
         dest: /etc/ssl/aai/dfn-aai.pem
         owner: root
@@ -46,7 +46,7 @@
       block:
 
         - name: DFN-PKI certificate for webserver
-          copy:
+          ansible.builtin.copy:
             src: "{{ idp_webserver_certificate | basename }}"
             dest: "{{ idp_webserver_certificate }}"
             owner: root
@@ -71,14 +71,14 @@
           register: certificatesigningrequest
 
         - name: save the csr locally
-          fetch:
+          ansible.builtin.fetch:
             src: "{{ idp_webserver_signing_request }}"
             dest: "./"
             mode: 0644
           register: certificatesigningrequest_copy
 
         - name: inform user on next steps
-          pause:
+          ansible.builtin.pause:
             prompt: |
               There was no proper certificate for the webserver.
 
@@ -104,7 +104,7 @@
             - "intermediate_certificates"
           loop_control:
             loop_var: idp_certificate_directory
-          copy:
+          ansible.builtin.copy:
             src: "{{ idp_certificate_directory }}"
             dest: "/etc/ssl/"
 
@@ -128,7 +128,7 @@
           register: idp_complete_chain
 
         - name: save complete chain
-          copy:
+          ansible.builtin.copy:
             content: "{{ ''.join(idp_complete_chain.complete_chain) }}"
             dest: "{{ idp_webserver_fullchain }}"
             owner: root
@@ -136,7 +136,7 @@
             mode: 0644
 
 - name: vhost configuration
-  template:
+  ansible.builtin.template:
     src: "templates/etc/apache2/sites-available/vhost.conf.j2"
     dest: "/etc/apache2/sites-available/{{ idp_fqdn }}.conf"
     owner: root
@@ -145,7 +145,7 @@
     # validate: apache2 -t %s
 
 - name: enable the vhost
-  command: "a2ensite {{ idp_fqdn }}.conf"
+  ansible.builtin.command: "a2ensite {{ idp_fqdn }}.conf"
   args:
     chdir: /etc/apache2/sites-available
   register: enable_vhost

@@ -17,7 +17,7 @@
   rescue:
 
     - name: inform user on private key problem
-      pause:
+      ansible.builtin.pause:
         prompt: |
           There was a problem deploying your provided private key.
           Either it was not provided as
@@ -31,7 +31,7 @@
   block:
 
     - name: DFN-PKI certificate for webserver
-      copy:
+      ansible.builtin.copy:
         src: "{{ idp_webserver_certificate | basename }}"
         dest: "{{ idp_webserver_certificate }}"
         owner: root
@@ -45,7 +45,7 @@
   rescue:
 
     - name: inform user on certificate problem
-      pause:
+      ansible.builtin.pause:
         prompt: |
           There was a problem deploying your provided certificate.
           Either it was not provided as

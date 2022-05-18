@@ -1,24 +1,24 @@
 ---
 - name: adapt retention time for log history
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/logback.xml
     regexp: '<variable name="idp.loghistory"'
     line: '<variable name="idp.loghistory" value="7" />'
 
 - name: adapt IdP log level for brute force detection
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/logback.xml
     regexp: '<variable name="idp.loglevel.idp"'
     line: '<variable name="idp.loglevel.idp" value="INFO" />'
 
 - name: make LDAP logging more verbose
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/logback.xml
     regexp: '<variable name="idp.loglevel.ldap"'
     line: '<variable name="idp.loglevel.ldap" value="INFO" />'
 
 - name: log client IPs for brute force detection
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/logback.xml
     regexp: '.*\{short\}\<\/Pattern\>$'
     line: '<Pattern>%date{ISO8601} - %level [%logger:%line] - IP:%mdc{idp.remote_addr:-n/a} - %msg%n%ex{short}</Pattern>'

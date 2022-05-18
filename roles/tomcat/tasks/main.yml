@@ -1,22 +1,22 @@
 ---
 - name: install required packages
-  apt:
+  ansible.builtin.apt:
     name: ['ntp', 'openjdk-11-jdk-headless', 'tomcat9', 'libtaglibs-standard-impl-java']
     state: present
 
 - name: give tomcat enough memory
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/default/tomcat9
     regexp: '^JAVA_OPTS'
     line: 'JAVA_OPTS="-Djava.awt.headless=true -XX:+UseConcMarkSweepGC -Xms1024m -Xmx2048m"'
 
 - name: make sure the ssl-cert group exists
-  group:
+  ansible.builtin.group:
     name: ssl-cert
     state: present
 
 - name: add tomcat user to ssl-cert group
-  user:
+  ansible.builtin.user:
     name: tomcat
     groups: ssl-cert
     append: true
@@ -24,7 +24,7 @@
 # Systemd override configuration so that tomcat can write logs and metadata.
 # The target directories have to exist before the override is created.
 - name: add systemd subdirectory
-  file:
+  ansible.builtin.file:
     path: /etc/systemd/system/tomcat9.service.d
     state: directory
     owner: root
@@ -32,7 +32,7 @@
     mode: 0755
 
 - name: Create /opt/shibboleth-idp directory
-  file:
+  ansible.builtin.file:
     path: /opt/shibboleth-idp/metadata
     state: directory
     recurse: true
@@ -41,7 +41,7 @@
     mode: 0755
 
 - name: Create /opt/shibboleth-idp/logs directory
-  file:
+  ansible.builtin.file:
     path: /opt/shibboleth-idp/logs
     state: directory
     owner: tomcat
@@ -49,7 +49,7 @@
     mode: 0755
 
 - name: make logs and metadata directories read-writeable
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/systemd/system/tomcat9.service.d/override.conf
     create: true
     block: |
@@ -62,7 +62,7 @@
   notify: daemon-reload
 
 - name: template for /etc/tomcat9/server.xml
-  template:
+  ansible.builtin.template:
     src: templates/etc/tomcat9/server.xml.j2
     dest: /etc/tomcat9/server.xml
     owner: root
@@ -70,7 +70,7 @@
     mode: 0640
 
 - name: disable session persistence across tomcat restarts
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/tomcat9/context.xml
     block: |
       <!-- Uncomment this to disable session persistence across Tomcat restarts -->
@@ -78,13 +78,13 @@
     insertbefore: '^</Context>'
 
 - name: append path to JSTL path to common loader
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/tomcat9/catalina.properties
     regexp: '^common.loader='
     line: 'common.loader="${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar","/usr/share/java/*.jar"'
 
 - name: prepare configuration for IdP servlet
-  template:
+  ansible.builtin.template:
     src: templates/etc/tomcat9/Catalina/localhost/idp.xml.j2
     dest: /etc/tomcat9/Catalina/localhost/idp.xml
     owner: root
