@@ -31,7 +31,7 @@
     group: root
     mode: 0755
 
-- name: Create /opt/shibboleth-idp directory
+- name: Create /opt/shibboleth-idp/metadata directory
   ansible.builtin.file:
     path: /opt/shibboleth-idp/metadata
     state: directory
