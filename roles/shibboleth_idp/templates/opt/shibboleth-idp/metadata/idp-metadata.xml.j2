@@ -91,7 +91,7 @@
             </ds:KeyInfo>
         </KeyDescriptor>
 
-        <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP-binding" Location="https://{{ idp_fqdn }}:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
+        <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://{{ idp_fqdn }}:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
 
         <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
         <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
