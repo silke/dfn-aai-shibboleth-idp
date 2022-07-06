@@ -64,6 +64,8 @@
             path: "{{ idp_webserver_signing_request }}"
             privatekey_path: "{{ idp_webserver_privatekey }}"
             country_name: "{{ openssl_country_name }}"
+            state_or_province_name: "{{ openssl_state }}"
+            locality_name: "{{ openssl_locality }}"
             organization_name: "{{ openssl_org_name }}"
             organizational_unit_name: "{{ openssl_org_unit }}"
             email_address: "{{ openssl_email_address }}"
