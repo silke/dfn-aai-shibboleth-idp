@@ -1,7 +1,7 @@
 ---
 - name: install required packages
   ansible.builtin.apt:
-    name: ['ntp', 'openjdk-11-jdk-headless', 'tomcat9', 'libtaglibs-standard-impl-java']
+    name: ['systemd-timesyncd', 'openjdk-11-jdk-headless', 'tomcat9', 'libtaglibs-standard-impl-java']
     state: present
 
 - name: give tomcat enough memory
