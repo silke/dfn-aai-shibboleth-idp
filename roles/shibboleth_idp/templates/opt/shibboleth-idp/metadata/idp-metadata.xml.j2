@@ -3,13 +3,7 @@
 
 <!-- {{ ansible_managed }} -->
 
-<!--
-     This is example metadata only. Do *NOT* supply it as is without review,
-     and do *NOT* provide it in real time to your partners.
-
-     This metadata is not dynamic - it will not change as your configuration changes.
--->
-<EntityDescriptor  xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:req-attr="urn:oasis:names:tc:SAML:protocol:ext:req-attr" xmlns:remd="http://refeds.org/metadata" entityID="https://{{ idp_fqdn }}/idp/shibboleth">
+<EntityDescriptor  xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:req-attr="urn:oasis:names:tc:SAML:protocol:ext:req-attr" validUntil="2023-02-07T12:55:33.492Z" entityID="https://{{ idp_fqdn }}/idp/shibboleth">
 
     <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
 
@@ -32,7 +26,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert_content }}
+                        {{ samlcert_content | regex_replace('-----BEGIN CERTIFICATE-----','') | regex_replace('-----END CERTIFICATE-----','') | trim }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -42,7 +36,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert_content }}
+                        {{ samlcert_content | regex_replace('-----BEGIN CERTIFICATE-----','') | regex_replace('-----END CERTIFICATE-----','') | trim }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -60,9 +54,6 @@
         <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://{{ idp_fqdn }}/idp/profile/SAML2/Redirect/SSO"/>
         <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://{{ idp_fqdn }}/idp/profile/SAML2/SOAP/ECP"/>
 
-        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
-        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
-
     </IDPSSODescriptor>
 
     <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
@@ -75,7 +66,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert_content }}
+                        {{ samlcert_content | regex_replace('-----BEGIN CERTIFICATE-----','') | regex_replace('-----END CERTIFICATE-----','') | trim }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -85,7 +76,7 @@
             <ds:KeyInfo>
                 <ds:X509Data>
                     <ds:X509Certificate>
-                        {{ samlcert_content }}
+                        {{ samlcert_content | regex_replace('-----BEGIN CERTIFICATE-----','') | regex_replace('-----END CERTIFICATE-----','') | trim }}
                     </ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
@@ -93,11 +84,7 @@
 
         <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://{{ idp_fqdn }}:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
 
-        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
-        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
-
     </AttributeAuthorityDescriptor>
-
 
     {% for item in metadata_contacts %}
     {% if item.name != "security" %}
