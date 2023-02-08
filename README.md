@@ -23,9 +23,6 @@ apt install mariadb-server mariadb-client libmariadb-java
 mysql_secure_installation
 ```
 * Install Ansible on the machine you want to run the playbook from.
-* A certificate for the webserver can be generated using the CSR the role produces on the first run.
-  The certificate authority of your choice, e.g. DFN-PKI, will create the certificate for you.
-  For SAML communication this playbook will generate a selfsigned certificate with a validity of three years for you.
 
 ## Certificates
 * Installed with this playbook, your IdP will use **different certificates for the webserver and for SAML communication**.
