@@ -23,14 +23,14 @@
 
     - name: get certificate to validate signed metadata
       ansible.builtin.get_url:
-        url: 'https://www.aai.dfn.de/fileadmin/metadata/dfn-aai.pem'
+        url: 'https://www.aai.dfn.de/metadata/dfn-aai.pem'
         dest: /etc/ssl/aai/dfn-aai.pem
         owner: root
         group: root
         mode: 0644
-        force: false
+        force: true
         # this is the sha256sum of the file, not the openssl fingerprint published on the website
-        checksum: sha256:951fa63523dca5dae9a4a7e76616ead21d07290c8ae4dc3e8880c34d7fd08a2d
+        checksum: sha256:b16a751a845e88c4895934714f0fd9b393c7ea043e0039b59e7e8d1287b7e57a
 
     - name: manage server private key
       block:
