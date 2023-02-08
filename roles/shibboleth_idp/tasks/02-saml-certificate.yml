@@ -34,7 +34,6 @@
     privatekey_path: "{{ idp_saml_privatekey }}"
     country_name: "{{ openssl_country_name }}"
     organization_name: "{{ openssl_org_name }}"
-    organizational_unit_name: "{{ openssl_org_unit }}"
     email_address: "{{ openssl_email_address }}"
     common_name: "{{ idp_fqdn }}"
     backup: true

@@ -6,7 +6,6 @@ shibboleth_idp_version: 4.1.7
 selfsigned_not_after: "+1095d"
 openssl_country_name: "DE"
 openssl_org_name: "Your home institution's name"
-openssl_org_unit: "Your department for certificate"
 openssl_email_address: "Mail address for certificate"
 
 institution_website: "https://example.org"
