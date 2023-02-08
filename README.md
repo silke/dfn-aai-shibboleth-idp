@@ -29,6 +29,7 @@ mysql_secure_installation
 * For SAML communication this playbook will generate a selfsigned certificate with a validity of three years for you.
 * For the webserver certificate, the playbook generates a private key and a CSR for you on first run. **THUS, IT WILL "FAIL" ON FIRST RUN! This is expected as you need your certificate authority to sign the CSR it generates for you.** Save the certificate in the directory you cloned the repository into. Rename the file to reflect you IdP and the server's FQDN like so: IDPVIRTUALHOST_MACHINEFQDN.crt.pem, e.g. idp.example.org_machine.some.fqdn.crt.pem. Run the playbook again. The rationale behind this procedure is to keep the private key only on the machine that needs it.
 * If you insist on providing your own existing private key and certificate, save both files in the local folder you cloned the repository into. Rename them to IDPVIRTUALHOST_MACHINEFQDN.crt.pem and IDPVIRTUALHOST_MACHINEFQDN.key.pem, e.g. idp.example.org_machine.some.fqdn.crt.pem and idp.example.org_machine.some.fqdn.key.pem and add `--tags=all,shibboleth_own_key` to your ansible invocation. Note that it is not recommended to keep your private key in that location!
+* If you are planning to fetch GÉANT TCS certificates via ACME for the webserver, you have to extend this playbook yourself. Please see the [TCS FAQ](https://doku.tid.dfn.de/de:dfnpki:tcsfaq#acme1) for details.
 
 ## Getting started
 * Clone this repository.
