@@ -67,7 +67,6 @@
             state_or_province_name: "{{ openssl_state }}"
             locality_name: "{{ openssl_locality }}"
             organization_name: "{{ openssl_org_name }}"
-            organizational_unit_name: "{{ openssl_org_unit }}"
             email_address: "{{ openssl_email_address }}"
             common_name: "{{ idp_fqdn }}"
           register: certificatesigningrequest
