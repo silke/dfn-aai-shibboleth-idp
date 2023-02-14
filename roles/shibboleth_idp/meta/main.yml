@@ -11,7 +11,7 @@ galaxy_info:
     - name: Debian
       versions:
         - buster
-        # bullseye is still untested
+        - bullseye
     - name: Ubuntu
       versions:
         - focal
