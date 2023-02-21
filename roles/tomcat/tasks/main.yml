@@ -83,6 +83,11 @@
     regexp: '^common.loader='
     line: 'common.loader="${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar","/usr/share/java/*.jar"'
 
+- name: directory for servlet config must exist
+  ansible.builtin.file:
+    path: /etc/tomcat9/Catalina/localhost
+    state: directory
+
 - name: prepare configuration for IdP servlet
   ansible.builtin.template:
     src: templates/etc/tomcat9/Catalina/localhost/idp.xml.j2
