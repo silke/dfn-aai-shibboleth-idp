@@ -21,7 +21,7 @@ idp.authn.LDAP.useStartTLS                     = {{ ldap_use_starttls }}
 ## SSL configuration, either jvmTrust, certificateTrust, or keyStoreTrust
 idp.authn.LDAP.sslConfig                       = certificateTrust
 ## If using certificateTrust above, set to the trusted certificate's path
-idp.authn.LDAP.trustCertificates                = {{ ldap_trusted_certificate }}
+idp.authn.LDAP.trustCertificates                = {{ ldap_trusted_certificate | default("/etc/ssl/certs/idm-root-ca.crt") }}
 ## If using keyStoreTrust above, set to the truststore path
 #idp.authn.LDAP.trustStore                       = %{idp.home}/credentials/ldap-server.truststore
 

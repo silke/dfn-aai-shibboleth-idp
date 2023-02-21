@@ -1,4 +1,23 @@
 ---
+# Install the root CA of the Identity Management System.
+- name: install cacert
+  block:
+
+  - name: make sure target directory exists
+    ansible.builtin.file:
+      path: /usr/local/share/ca-certificates
+      state: directory
+
+  - name: copy CA cert to server
+    ansible.builtin.copy:
+      src: "root_certificates/idm-root-ca.crt"
+      dest: "/usr/local/share/ca-certificates/idm-root-ca.crt"
+    register: idm_cacert
+
+  - name: Run update-ca-certificates
+    command: update-ca-certificates
+    when: idm_cacert is changed
+
 - name: configure ldap.properties
   ansible.builtin.template:
     src: templates/opt/shibboleth-idp/conf/ldap.properties.j2
