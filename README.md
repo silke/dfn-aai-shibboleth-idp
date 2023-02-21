@@ -23,13 +23,15 @@ apt install mariadb-server mariadb-client libmariadb-java
 mysql_secure_installation
 ```
 * Install Ansible on the machine you want to run the playbook from.
+* Get a webserver certificate (see next section for details).
+* Get a copy of the CA certificate of your identity management system (see next section for details).
 
 ## Certificates
 * Installed with this playbook, your IdP will use **different certificates for the webserver and for SAML communication**.
-* For SAML communication this playbook will generate a selfsigned certificate with a validity of three years for you.
-* For the webserver certificate, the playbook generates a private key and a CSR for you on first run. **THUS, IT WILL "FAIL" ON FIRST RUN! This is expected as you need your certificate authority to sign the CSR it generates for you.** Save the certificate in the directory you cloned the repository into. Rename the file to reflect you IdP and the server's FQDN like so: IDPVIRTUALHOST_MACHINEFQDN.crt.pem, e.g. idp.example.org_machine.some.fqdn.crt.pem. Run the playbook again. The rationale behind this procedure is to keep the private key only on the machine that needs it.
-* If you insist on providing your own existing private key and certificate, save both files in the local folder you cloned the repository into. Rename them to IDPVIRTUALHOST_MACHINEFQDN.crt.pem and IDPVIRTUALHOST_MACHINEFQDN.key.pem, e.g. idp.example.org_machine.some.fqdn.crt.pem and idp.example.org_machine.some.fqdn.key.pem and add `--tags=all,shibboleth_own_key` to your ansible invocation. Note that it is not recommended to keep your private key in that location!
-* If you are planning to fetch GÉANT TCS certificates via ACME for the webserver, you have to extend this playbook yourself. Please see the [TCS FAQ](https://doku.tid.dfn.de/de:dfnpki:tcsfaq#acme1) for details.
+* For **SAML** communication this playbook will generate a selfsigned certificate with a validity of three years for you. It is then inserted into the xml file that you use to upload the IdP to the DFN-AAI metadata administration tool (`metadata/idp-metadata.xml`).
+* As to the **webserver**, you have to provide a certificate yourself. To fetch GÉANT TCS certificates via ACME for the webserver, you might want to extend this playbook. Please see the [TCS FAQ](https://doku.tid.dfn.de/de:dfnpki:tcsfaq#acme1) for details. You can also fetch a certificate manually and place it onto the server.
+* To use the Apache configuration template for the virtual host, edit the file `roles/shibboleth_idp/vars/group_vars/all/vars`: Specify the absolute paths to your certificate chain and key files in these two variables: `idp_webserver_fullchain` and `idp_webserver_privatekey`. The virtual host config will be written for you, but you'll have to enable it yourself (see below).
+* Your IdP has to trust the CA certificate of your identity management system. Copy the CA certificate in `PEM` format into the `root_certificates` folder and rename it to `idm-root-ca.crt`. It will be installed on the server and added to the LDAP and Apache configuration files automatically.
 
 ## Getting started
 * Clone this repository.
@@ -51,37 +53,28 @@ echo "vault-password.txt" >> .gitignore
   * inventory/group_vars/production/vault
 * Add two files named logo.png and favicon.ico to the folder `roles/shibboleth-idp/files`.
 * Run it! The whole playbook consists of different roles, tasks and subtasks that you can run independently. Refer to the group (test oder production in this case) with the ''-l'' parameter.
-  * To install and configure Tomcat, Apache and Shibboleth IdP in one go run
+  * To install and configure Tomcat, Apache and Shibboleth IdP in one go run. After that, check and enable the virtual host configuration:
   ```sh
   ansible-playbook -i inventory/hosts site.yml -l test --tags shibboleth_idp
+  apache2ctl -t
+  a2ensite YOUR-FQDN.conf
+  systemctl reload apache2
   ```
-  The role shibboleth-idp will automatically run the tomcat and apache roles.
   * To run an individual role:
   ```sh
   ansible-playbook -i inventory/hosts site.yml -l test --tags tomcat
   ```
-  * To (re-)run parts of the subtasks in the shibboleth-idp role, e.g. the LDAP configuration:
+  * You can (re-)run any of the subtasks in the shibboleth-idp role with a tag (see `roles/shibboleth_idp/tasks/main.yml`), e.g. the LDAP configuration:
   ```sh
   ansible-playbook -i inventory/hosts site.yml -l test --tags config-ldap
   ```
-  * To change attribute-resolver.xml or attribute-filter.xml:
+  * To roll out changes in the templates attribute-resolver.xml or attribute-filter.xml:
   ```sh
   ansible-playbook -i inventory/hosts site.yml -l test --tags config-attributes
   ```
-
-For development purposes you can create a local certificate authority as follows:
-```sh
-ansible-playbook setup_dev.yml
-```
-
-Signing your CSR is then done as follows:
-```sh
-ansible-playbook selfsign_csr.yml
-```
-
 ## Testing the new IdP
 * Verify the IdP status page: https://YOUR-FQDN/idp/status
-* Log in to [DFN-AAI metadata administration](https://mdv.aai.dfn.de) and create a new IdP by uploading the content of `/opt/shibboleth-idp/metadata/idp-metadata.xml` to the administration tool. Check if it looks good and save the form. There is no need to change the certificate. Ansible generated a SAML certificate for your IdP and it was imported to the metadata administration in the first go.
+* Log in to [DFN-AAI metadata administration](https://mdv.aai.dfn.de) and create a new IdP by uploading the content of `/opt/shibboleth-idp/metadata/idp-metadata.xml` to the administration tool. Check if it looks good and save the form.
 * Add the IdP to DFN-AAI-Test, wait 90 minutes, then try to log in for testsp3.aai.dfn.de.
 
 ## Pitfalls

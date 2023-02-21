@@ -2,6 +2,32 @@
 # {{ ansible_managed }}
 
 {% if idp_ipv6 is defined %}
+<VirtualHost {{ idp_ipv4 }}:80 {{ idp_ipv6 }}:80>
+{% else %}
+<VirtualHost {{ idp_ipv4 }}:80>
+{% endif %}
+  ServerName {{ idp_fqdn }}:80
+  RewriteEngine on
+  RewriteCond %{HTTPS} off
+  # redirect everything but ACME challenges to https
+  RewriteCond %{REQUEST_URI} !^/\.well-known/acme\-challenge/
+  RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</VirtualHost>
+
+################################################
+# für ECP
+LDAPTrustedGlobalCert CA_BASE64 {{ ldap_trusted_certificate | default("/etc/ssl/certs/idm-root-ca.pem") }}
+
+# First LDAP server
+<AuthnProviderAlias ldap myldap>
+  AuthLDAPBindDN {{ ldap_binddn }}
+  AuthLDAPBindPassword {{ ldap_bindpw }}
+  AuthLDAPURL "{{ ldap_host }}/{{ ldap_basedn }}?{{ ldap_userfilter_short }}?sub"
+</AuthnProviderAlias>
+
+################################################
+
+{% if idp_ipv6 is defined %}
 <VirtualHost {{ idp_ipv4 }}:443 {{ idp_ipv6 }}:443>
 {% else %}
 <VirtualHost {{ idp_ipv4 }}:443>
@@ -21,6 +47,14 @@
         Require all granted
         ProxyPass ajp://localhost:8009/idp
         Header always append X-FRAME-OPTIONS "SAMEORIGIN"
+    </Location>
+
+    # ECP-Config für Sync&Share-Clients
+    <Location /idp/profile/SAML2/SOAP/ECP>
+        AuthType Basic
+        AuthName "{{ idp_fqdn }} - ECP profile"
+        AuthBasicProvider myldap
+        Require valid-user
     </Location>
 
     # support favicon.ico and robots.txt

@@ -15,8 +15,14 @@ idp_src_dir: "{{
 idp_ansible_indicator: >-
     /opt/shibboleth-idp/.ansible_initial_installation_successful.log
 
-statuspage_dfn_ipv4: "'193.174.247.0/24', '194.95.243.0/24', '194.95.244.0/24', '194.95.242.0/24'"
-statuspage_dfn_ipv6: "2001:638:206:1::/64"
+statuspage_dfn_ipv4:
+  - 193.174.247.0/24
+  - 194.95.243.0/24
+  - 194.95.244.0/24
+  - 194.95.242.0/24
+
+statuspage_dfn_ipv6:
+  - 2001:638:206:1::/64
 
 idp_archive_url: "{{
   'https://shibboleth.net/downloads/identity-provider/' +
@@ -38,32 +44,3 @@ idp_archive_checksum_url: "{{
 idp_keys_url: "{{
   'https://shibboleth.net/downloads/PGP_KEYS'
 }}"
-
-
-# certificate basename depends on hostname to support multiple hosts
-idp_webserver_basename: "{{ idp_fqdn }}_{{ inventory_hostname }}"
-idp_webserver_privatekey: "{{
-  '/etc/ssl/private/' +
-  idp_webserver_basename +
-  '.key.pem'
-}}"
-idp_webserver_certificate: "{{
-  '/etc/ssl/localcerts/' +
-  idp_webserver_basename +
-  '.crt.pem'
-}}"
-idp_webserver_signing_request: "{{
-  '/etc/ssl/csr/' +
-  idp_webserver_basename +
-  '.csr'
-}}"
-idp_webserver_fullchain: "{{
-  '/etc/ssl/localcerts/' +
-  idp_webserver_basename +
-  '_completechain.crt.pem'
-}}"
-
-# TODO Check how this should be handled in federating system
-idp_saml_privatekey: "/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
-idp_saml_certificate: "/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
-idp_saml_signing_request: "/etc/ssl/csr/{{ idp_fqdn }}-saml.csr"

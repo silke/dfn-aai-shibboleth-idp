@@ -4,7 +4,7 @@
     name: ['apache2']
     state: present
 
-- name: make sure apache is enabled
+- name: make sure apache is enabled in systemd
   ansible.builtin.service:
     name: apache2
     enabled: true
@@ -39,14 +39,3 @@
     block: "{{
       lookup('file', 'templates/block-mozilla-ssl-config-generator.j2')
     }}"
-
-- name: ensure that the directories for ssl certs are present
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-  loop:
-    - /etc/ssl/aai
-    - /etc/ssl/localcerts

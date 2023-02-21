@@ -1,12 +1,7 @@
 ---
-# Here the cert/key pair is distributed.
+# Here the cert/key pair is checked.
 - name: openssl certificate management
   block:
-
-    - name: make sure openssl is installed
-      ansible.builtin.apt:
-        name: openssl
-        state: present
 
     - name: ensure that the directories for ssl certs are present
       ansible.builtin.file:
@@ -16,122 +11,26 @@
         group: root
         mode: 0755
       loop:
-        - /etc/ssl/aai
         - /etc/ssl/localcerts
-        - /etc/ssl/rootcerts
-        - /etc/ssl/csr
 
-    - name: get certificate to validate signed metadata
-      ansible.builtin.get_url:
-        url: 'https://www.aai.dfn.de/metadata/dfn-aai.pem'
-        dest: /etc/ssl/aai/dfn-aai.pem
-        owner: root
-        group: root
-        mode: 0644
-        force: true
-        # this is the sha256sum of the file, not the openssl fingerprint published on the website
-        checksum: sha256:b16a751a845e88c4895934714f0fd9b393c7ea043e0039b59e7e8d1287b7e57a
-
-    - name: manage server private key
+    - name: check presence and permissions of private key
       block:
 
         - name: private key for webserver certificate
-          community.crypto.openssl_privatekey:
+          ansible.builtin.file:
             path: "{{ idp_webserver_privatekey }}"
+            state: file
             owner: root
             group: ssl-cert
             mode: 0640
 
-    - name: manage server certificate
+    - name: check presence of web server certificate incl. chain
       block:
 
-        - name: DFN-PKI certificate for webserver
-          ansible.builtin.copy:
-            src: "{{ idp_webserver_certificate | basename }}"
-            dest: "{{ idp_webserver_certificate }}"
-            owner: root
-            group: ssl-cert
-            mode: 0644
-
-        - name: validate DFN-PKI certificate for webserver
-          community.crypto.x509_certificate_info:
-            path: "{{ idp_webserver_certificate }}"
-
-      rescue:
-
-        - name: create csr for webserver certificate
-          community.crypto.openssl_csr:
-            path: "{{ idp_webserver_signing_request }}"
-            privatekey_path: "{{ idp_webserver_privatekey }}"
-            country_name: "{{ openssl_country_name }}"
-            state_or_province_name: "{{ openssl_state }}"
-            locality_name: "{{ openssl_locality }}"
-            organization_name: "{{ openssl_org_name }}"
-            email_address: "{{ openssl_email_address }}"
-            common_name: "{{ idp_fqdn }}"
-          register: certificatesigningrequest
-
-        - name: save the csr locally
-          ansible.builtin.fetch:
-            src: "{{ idp_webserver_signing_request }}"
-            dest: "./"
-            mode: 0644
-          register: certificatesigningrequest_copy
-
-        - name: inform user on next steps
-          ansible.builtin.pause:
-            prompt: |
-              There was no proper certificate for the webserver.
-
-              A CSR has been created at
-
-                {{ certificatesigningrequest_copy['dest'] }}
-
-              Use this file to get a certificate from your trusted CA.
-
-              To have this role deploy the certificate, save it as
-
-                ./{{ idp_webserver_certificate | basename }}
-
-            seconds: 30
-          failed_when: true  # Stop playbook execution
-
-    - name: create certificate chain
-      block:
-
-        - name: copy certificates to build certificate chain
-          loop:
-            - "root_certificates"
-            - "intermediate_certificates"
-          loop_control:
-            loop_var: idp_certificate_directory
-          ansible.builtin.copy:
-            src: "{{ idp_certificate_directory }}"
-            dest: "/etc/ssl/"
-
-        - name: get the certificate
-          community.crypto.x509_certificate_info:
-            path: "{{ idp_webserver_certificate }}"
-          register: certificate
-
-        # Apache now takes the whole chain in SSLCertificateFile.
-        # Here the chain is appended to the certificate.
-        - name: concatenate certificate with DFN chain
-          community.crypto.certificate_complete_chain:
-            input_chain: "{{ lookup(
-              'file',
-              idp_webserver_certificate | basename
-              ) }}"
-            root_certificates:
-              - "/etc/ssl/root_certificates/"
-            intermediate_certificates:
-              - "/etc/ssl/intermediate_certificates/"
-          register: idp_complete_chain
-
-        - name: save complete chain
-          ansible.builtin.copy:
-            content: "{{ ''.join(idp_complete_chain.complete_chain) }}"
-            dest: "{{ idp_webserver_fullchain }}"
+        - name: web server certificate
+          ansible.builtin.file:
+            path: "{{ idp_webserver_fullchain }}"
+            state: file
             owner: root
             group: root
             mode: 0644
@@ -143,12 +42,13 @@
     owner: root
     group: root
     mode: 0644
-    # validate: apache2 -t %s
 
-- name: enable the vhost
-  ansible.builtin.command: "a2ensite {{ idp_fqdn }}.conf"
-  args:
-    chdir: /etc/apache2/sites-available
-  register: enable_vhost
-  changed_when: "'already enabled' not in enable_vhost.stdout"
-  notify: restart apache
+# VHost config is not enabled automatically. Check that you have
+# certificate/chain and key in place before proceeding.
+#- name: enable the vhost
+#  ansible.builtin.command: "a2ensite {{ idp_fqdn }}.conf"
+#  args:
+#    chdir: /etc/apache2/sites-available
+#  register: enable_vhost
+#  changed_when: "'already enabled' not in enable_vhost.stdout"
+#  notify: restart apache

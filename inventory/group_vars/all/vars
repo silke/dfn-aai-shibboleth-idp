@@ -37,11 +37,14 @@ keystore_password: "{{ vault_keystore_password }}"
 ### IdM - change according to your needs ###
 ldap_authenticator: bindSearchAuthenticator
 ldap_host: "{{ vault_ldap_host }}"
-ldap_trusted_certificate: "/etc/ssl/certs/T-TeleSec_GlobalRoot_Class_2.pem"
+# The following is the default. Change if needed.
+# ldap_trusted_certificate: "/etc/ssl/certs/idm-root-ca.pem"
 ldap_use_starttls: true
 ldap_basedn: "{{ vault_ldap_basedn }}"
 ldap_subtreeSearch: true
 ldap_userfilter: "(uid={user})"
+# same as above but just the value, needed in Apache Config:
+ldap_userfilter_short: uid
 ldap_binddn: "{{ vault_ldap_binddn }}"
 ldap_bindpw: "{{ vault_ldap_bindpw }}"
 ldap_search_filter: (uid=$resolutionContext.principal)
@@ -63,7 +66,20 @@ metadata_local:
 
 loglevel: "DEBUG"
 
-### access to IdP status page, format: 127.0.0.1/32 ###
-statuspage_ipv4: ""
-### access to IdP status page, format: ::1/128, ipv6 is optional ###
-# statuspage_ipv6: ""
+### access to IdP web interfaces ###
+# to trigger actions
+# to view the IdP status page (DFN monitoring IPs are appended to this setting)
+# format: CIDR notation
+statuspage_ipv4: 
+  - xxx.xxx.xxx.xxx/yy
+  - yyy.yyy.yyy.yyy/zz
+
+statuspage_ipv6:
+  - xxxx:xxxx:y:1111::11/yy
+
+idp_webserver_privatekey: "/etc/letsencrypt/live/{{ idp_fqdn }}/privkey.pem"
+idp_webserver_fullchain: "/etc/letsencrypt/live/{{ idp_fqdn }}/fullchain.pem"
+
+idp_saml_privatekey: "/etc/ssl/private/{{ idp_fqdn }}-saml.key.pem"
+idp_saml_certificate: "/etc/ssl/localcerts/{{ idp_fqdn }}-saml.crt.pem"
+idp_saml_signing_request: "/etc/ssl/csr/{{ idp_fqdn }}-saml-csr.pem"

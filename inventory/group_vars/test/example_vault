@@ -5,7 +5,3 @@ vault_database_admin: youraccount
 vault_database_admin_password: yoursecret
 vault_database_password: yoursecret
 
-vault_webserver_key: |
-  -----BEGIN RSA PRIVATE KEY-----
-  insert secret key
-  -----END RSA PRIVATE KEY-----

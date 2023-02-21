@@ -1,4 +1,15 @@
 ---
+- name: get certificate to validate signed metadata
+  ansible.builtin.get_url:
+    url: 'https://www.aai.dfn.de/metadata/dfn-aai.pem'
+    dest: /etc/ssl/aai/dfn-aai.pem
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+    # this is the sha256sum of the file, not the openssl fingerprint published on the website
+    checksum: sha256:b16a751a845e88c4895934714f0fd9b393c7ea043e0039b59e7e8d1287b7e57a
+
 ### metadata/idp-metadata.xml ###
 - name: link self signed certificate in idp.properties
   ansible.builtin.lineinfile:
