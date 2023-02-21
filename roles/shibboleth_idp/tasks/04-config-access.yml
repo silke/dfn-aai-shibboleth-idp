@@ -1,46 +1,11 @@
 ---
-### conf/access-control.xml ###
-- name: configure access to IdP webservices for server with ipv6
-  ansible.builtin.lineinfile:
-    path: /opt/shibboleth-idp/conf/access-control.xml
-    regexp: "p:allowedRanges"
-    line: p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}', '{{ statuspage_ipv6 }}'} }" />
-    insertafter: '<bean parent="shibboleth.IPRangeAccessControl"'
-  when: idp_ipv6 is defined
-
-- name: configure access to IdP webservices for servers without ipv6
-  ansible.builtin.lineinfile:
-    path: /opt/shibboleth-idp/conf/access-control.xml
-    regexp: "p:allowedRanges"
-    line: p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}'} }" />
-    insertafter: '<bean parent="shibboleth.IPRangeAccessControl"'
-  when: idp_ipv6 is undefined
-
-- name: configure access to status page for own and DFN monitoring IP ranges with ipv6
-  ansible.builtin.blockinfile:
-    path: /opt/shibboleth-idp/conf/access-control.xml
-    # yamllint disable rule:line-length
-    block: |
-      <entry key="StatusAccessByIPAddress">
-          <bean parent="shibboleth.IPRangeAccessControl" p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}', '{{ statuspage_ipv6 }}', {{ statuspage_dfn_ipv4 }}, '{{ statuspage_dfn_ipv6}}' } }" />
-      </entry>
-    insertbefore: "</util:map>"
-    # yamllint enable rule:line-length
-    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
-  when: idp_ipv6 is defined
-
-- name: configure access to status page for own and DFN monitoring IP ranges without ipv6
-  ansible.builtin.blockinfile:
-    path: /opt/shibboleth-idp/conf/access-control.xml
-    # yamllint disable rule:line-length
-    block: |
-      <entry key="StatusAccessByIPAddress">
-          <bean parent="shibboleth.IPRangeAccessControl" p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '{{ statuspage_ipv4 }}', {{ statuspage_dfn_ipv4 }} } }" />
-      </entry>
-    insertbefore: "</util:map>"
-    # yamllint enable rule:line-length
-    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
-  when: idp_ipv6 is undefined
+- name: configure access control to web interfaces and status page
+  template:
+    src: templates/opt/shibboleth-idp/conf/access-control.xml.j2
+    dest: /opt/shibboleth-idp/conf/access-control.xml
+    owner: root
+    group: root
+    mode: 0644
 
 # Point to StatusAccessByIPAddress either in conf/admin/admin.properties or in conf/idp.properties
 - name: add reference to access policy in idp.properties
