@@ -1,0 +1,42 @@
+---
+- name: ensure that fail2ban is installed
+  ansible.builtin.apt:
+    name: fail2ban
+    state: present
+
+- name: create a filter for log messages to look for
+  ansible.builtin.copy:
+    dest: /etc/fail2ban/filter.d/idp.conf
+    content: |
+      [Definition]
+      failregex = IP\:<HOST> .* Login by .* failed
+                  IP\:<HOST> .* No password available
+      ignoreregex =
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create a custom jail
+  ansible.builtin.copy:
+    dest: "/etc/fail2ban/jail.d/{{ idp_fqdn }}.local"
+    content: |
+      # Ansible managed
+      [idp]
+      enabled  = true
+      port     = http,https
+      filter   = idp
+      logpath  = /opt/shibboleth-idp/logs/idp-process.log
+      maxretry = 5
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Log file has to be present to start f2b
+  ansible.builtin.file:
+    path: /opt/shibboleth-idp/logs/idp-process.log
+    state: touch
+
+- name: restart fail2ban
+  service:
+    name: fail2ban
+    state: restarted

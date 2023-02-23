@@ -44,3 +44,6 @@
 
 - ansible.builtin.import_tasks: 15-config-logo.yml
   tags: config-logo
+
+- ansible.builtin.import_tasks: 20-config-fail2ban.yml
+  tags: config-fail2ban
