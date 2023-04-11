@@ -1,6 +1,6 @@
 # These are IdP variables both for test and production IdPs:
 
-shibboleth_idp_version: 4.3.0
+shibboleth_idp_version: 4.3.1
 
 ### self-signed SAML certificate ###
 selfsigned_not_after: "+1095d"
