@@ -1,0 +1,64 @@
+- name: install mariadb
+  ansible.builtin.apt:
+    name: ['mariadb-server']
+    state: present
+
+- name: make sure mariadb is running
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+
+- name: create a database for shibboleth-idp
+  community.mysql.mysql_db:
+    name: "{{ database_name }}"
+    state: present
+    encoding: utf8
+    check_implicit_admin: true
+    # connect via network or socket depending on your needs
+    # login_host: "{{ database_host }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: "{{ database_admin }}"
+    login_password: "{{ database_admin_password }}"
+  no_log: true
+
+- name: create a database user for shibboleth-idp
+  mysql_user:
+    name: "{{ database_user }}"
+    state: present
+    password: "{{ database_password }}"
+    priv: "{{ database_name }}.*:ALL"
+    check_implicit_admin: true
+    # connect via network or socket depending on your needs
+    # login_host: "{{ database_host }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_host: "{{ database_host }}"
+    login_user: "{{ database_admin }}"
+    login_password: "{{ database_admin_password }}"
+  no_log: true
+
+- name: get mysqldumps for two database tables
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /tmp
+    owner: root
+    group: root
+    mode: 0644
+  with_fileglob:
+    - "files/*.sql"
+
+- name: import both tables to database
+  mysql_db:
+    name: "{{ database_name }}"
+    state: import
+    target: "{{ item }}"
+    # connect via network or socket depending on your needs
+    # login_host: "{{ database_host }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: "{{ database_admin }}"
+    login_password: "{{ database_admin_password }}"
+  loop:
+    - /tmp/table-shibpid.sql
+    - /tmp/table-storage-records.sql
+  # import is not idempotent and thus may fail
+  ignore_errors: true
+  no_log: true
