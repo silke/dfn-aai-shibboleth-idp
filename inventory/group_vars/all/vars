@@ -2,9 +2,9 @@
 
 shibboleth_idp_version: 4.3.1
 
-# If you want use an external db-server switch too false 
+# If you want use an external database server switch to false
 idp_local_db: true
-# If you ant to create the external db from that playbook switch to true
+# If you want to create the external database from this playbook switch to true
 # Remote access for DB-Admin needed
 create_remote_db: false
 
