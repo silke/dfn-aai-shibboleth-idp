@@ -22,7 +22,7 @@
   no_log: true
 
 - name: create a database user for shibboleth-idp
-  mysql_user:
+  community.mysql.mysql_user:
     name: "{{ database_user }}"
     state: present
     password: "{{ database_password }}"
@@ -47,7 +47,7 @@
     - "files/*.sql"
 
 - name: import both tables to database
-  mysql_db:
+  community.mysql.mysql_db:
     name: "{{ database_name }}"
     state: import
     target: "{{ item }}"
