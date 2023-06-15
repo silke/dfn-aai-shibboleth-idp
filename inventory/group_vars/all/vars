@@ -2,6 +2,12 @@
 
 shibboleth_idp_version: 4.3.1
 
+# If you want use an external database server switch to false
+idp_local_db: true
+# If you want to create the external database from this playbook switch to true
+# Remote access for DB-Admin needed
+create_remote_db: false
+
 ### self-signed SAML certificate ###
 selfsigned_not_after: "+1095d"
 openssl_country_name: "DE"

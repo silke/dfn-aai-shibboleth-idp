@@ -17,11 +17,12 @@ To submit a merge request:
 ## Prerequisites
 
 * Use a Debian 11 or an Ubuntu 20.04 machine, other distros have not been tested.
-* This playbook creates a MariaDB database for your IdP. However it does not secure your database server. You might want to prepare MariaDB beforehand, e.g. by running
+* This playbook creates a local MariaDB database for your IdP. However it does not secure your database server. You might want to prepare MariaDB beforehand, e.g. by running
 ```
 apt install mariadb-server mariadb-client libmariadb-java
 mysql_secure_installation
 ```
+* To use an existing remote database server instead, change the according settings in `inventory/group_vars/all/vars`. There you can specify if the database shall be created for you or not, too.
 * Install Ansible on the machine you want to run the playbook from.
 * Get a webserver certificate (see next section for details).
 * Get a copy of the CA certificate of your identity management system (see next section for details).
