@@ -8,7 +8,7 @@
   ansible.builtin.lineinfile:
     path: /etc/default/tomcat9
     regexp: '^JAVA_OPTS'
-    line: 'JAVA_OPTS="-Djava.awt.headless=true -XX:+UseConcMarkSweepGC -Xms1024m -Xmx2048m"'
+    line: 'JAVA_OPTS="-Djava.awt.headless=true -Xms1024m -Xmx2048m"'
 
 - name: make sure the ssl-cert group exists
   ansible.builtin.group:
