@@ -30,20 +30,23 @@
 - ansible.builtin.import_tasks: 10-config-database.yml
   tags: config-database
 
-- ansible.builtin.import_tasks: 11-config-attributes.yml
+- ansible.builtin.import_tasks: 11-install-nashorn.yml
+  tags: install-nashorn
+
+- ansible.builtin.import_tasks: 12-config-attributes.yml
   tags: config-attributes
 
-- ansible.builtin.import_tasks: 12-config-pid.yml
+- ansible.builtin.import_tasks: 13-config-pid.yml
   tags: config-pid
 
-- ansible.builtin.import_tasks: 13-config-sessions-consent.yml
+- ansible.builtin.import_tasks: 14-config-sessions-consent.yml
   tags: config-sessions-consent
-
-- ansible.builtin.import_tasks: 14-config-slo.yml
-  tags: config-slo
 
 - ansible.builtin.import_tasks: 15-config-logo.yml
   tags: config-logo
+
+- ansible.builtin.import_tasks: 16-config-slo.yml
+  tags: config-slo
 
 - ansible.builtin.import_tasks: 20-config-fail2ban.yml
   tags: config-fail2ban

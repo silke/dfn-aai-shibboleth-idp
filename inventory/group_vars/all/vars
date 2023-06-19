@@ -2,6 +2,7 @@
 
 shibboleth_idp_version: 4.3.1
 jdbc_plugin_version: 1.0.4
+nashorn_plugin_version: 1.1.0
 
 # If you want use an external database server switch to false
 idp_local_db: true

@@ -60,3 +60,19 @@ jdbc_plugin_signature_url: "{{
   jdbc_plugin_version +
   '.tar.gz.asc'
 }}"
+
+nashorn_plugin_archive_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/scripting/' +
+  nashorn_plugin_version +
+  '/idp-plugin-nashorn-jdk-dist-' +
+  nashorn_plugin_version +
+  '.tar.gz'
+}}"
+
+nashorn_plugin_signature_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/scripting/' +
+  nashorn_plugin_version +
+  '/idp-plugin-nashorn-jdk-dist-' +
+  nashorn_plugin_version +
+  '.tar.gz.asc'
+}}"
