@@ -18,7 +18,70 @@
     state: link
   notify: restart tomcat
 
-- name: configure database access via JPAStorageService
+- name: install the jdbc plugin
+  block:
+
+    - name: check if the jdbc plugin is installed
+      ansible.builtin.shell: "/opt/shibboleth-idp/bin/plugin.sh -l | grep '^Plugin: net.shibboleth.plugin.storage.jdbc'"
+      register: idp_jdbc_plugin_status
+      failed_when: idp_jdbc_plugin_status.rc != 0
+
+    - name: debug
+      debug:
+        msg: idp_jdbc_plugin_status.rc
+
+  rescue:
+
+  # Download the JDBC plugin version number given in group_vars/idphosts/vars
+  - name: download the latest jdbc plugin
+    ansible.builtin.get_url:
+      url: "{{ item }}"
+      dest: /opt/install
+      force: false
+    loop:
+      - "{{ jdbc_plugin_archive_url }}"
+      - "{{ jdbc_plugin_signature_url }}"
+      - "{{ idp_keys_url }}"
+
+  - name: import the PGP key
+    ansible.builtin.command: gpg --import PGP_KEYS
+    args:
+      chdir: /opt/install
+    register: import_pgp_keys
+    changed_when: "'imported:' in import_pgp_keys.stdout"
+
+  - name: verify the download
+    ansible.builtin.command: >
+      gpg
+      --verify
+      java-plugin-jdbc-storage-{{ jdbc_plugin_version }}.tar.gz.asc
+      java-plugin-jdbc-storage-{{ jdbc_plugin_version }}.tar.gz
+    args:
+      chdir: /opt/install
+    register: verified_plugin_download
+    changed_when: false
+
+  - name: extract the archive if verified
+    ansible.builtin.unarchive:
+      src: "{{
+        '/opt/install/java-plugin-jdbc-storage-' +
+        jdbc_plugin_version +
+        '.tar.gz'
+      }}"
+      dest: /opt/install
+      remote_src: true
+    when: verified_plugin_download is succeeded
+
+  - name: install the jdbc plugin
+    ansible.builtin.shell: "/opt/shibboleth-idp/bin/plugin.sh --truststore /opt/install/PGP_KEYS -i java-plugin-jdbc-storage-{{ jdbc_plugin_version }}.tar.gz"
+    args:
+      chdir: /opt/install
+    register: idp_jdbc_plugin_installed
+    #failed_when: "'[FAILED]' in idp_jdbc_plugin_installed.stdout"
+
+  tags: tester
+
+- name: configure database access via JDBCStorageService
   ansible.builtin.blockinfile:
     path: /opt/shibboleth-idp/conf/global.xml
     block: |
@@ -34,24 +97,10 @@
           p:maxIdle="100"
           p:validationQuery="select 1"
           p:validationQueryTimeout="5" />
-      <bean id="shibboleth.JPAStorageService"
-          class="org.opensaml.storage.impl.JPAStorageService"
+      <bean id="JDBCStorageService"
+          parent="shibboleth.JDBCStorageService"
           p:cleanupInterval="%{idp.storage.cleanupInterval:PT10M}"
-          c:factory-ref="shibboleth.JPAStorageService.EntityManagerFactory" />
-      <bean id="shibboleth.JPAStorageService.EntityManagerFactory"
-          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-          <property name="packagesToScan" value="org.opensaml.storage.impl"/>
-          <property name="dataSource" ref="shibboleth.MySQLDataSource"/>
-          <property name="jpaVendorAdapter" ref="shibboleth.JPAStorageService.JPAVendorAdapter"/>
-          <property name="jpaDialect">
-              <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
-          </property>
-      </bean>
-      <bean id="shibboleth.JPAStorageService.JPAVendorAdapter"
-          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
-          p:generateDdl="true"
-          p:database="MYSQL"
-          p:databasePlatform="org.hibernate.dialect.MySQL5Dialect" />
+          p:dataSource-ref="shibboleth.MySQLDataSource" />
     insertbefore: </beans>
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   notify: restart tomcat

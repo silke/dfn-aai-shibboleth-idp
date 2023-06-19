@@ -3,13 +3,13 @@
   ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/idp.properties
     regexp: "idp.session.StorageService"
-    line: idp.session.StorageService = shibboleth.JPAStorageService
+    line: idp.session.StorageService = JDBCStorageService
 
 - name: save user consent in database
   ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/idp.properties
     regexp: "idp.consent.StorageService"
-    line: idp.consent.StorageService = shibboleth.JPAStorageService
+    line: idp.consent.StorageService = JDBCStorageService
 
 - name: save user consent for attribute release in database I
   ansible.builtin.lineinfile:
