@@ -79,8 +79,6 @@
     register: idp_jdbc_plugin_installed
     #failed_when: "'[FAILED]' in idp_jdbc_plugin_installed.stdout"
 
-  tags: tester
-
 - name: configure database access via JDBCStorageService
   ansible.builtin.blockinfile:
     path: /opt/shibboleth-idp/conf/global.xml
