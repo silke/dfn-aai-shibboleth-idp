@@ -44,3 +44,19 @@ idp_archive_checksum_url: "{{
 idp_keys_url: "{{
   'https://shibboleth.net/downloads/PGP_KEYS'
 }}"
+
+jdbc_plugin_archive_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/jdbc/' +
+  jdbc_plugin_version +
+  '/java-plugin-jdbc-storage-' +
+  jdbc_plugin_version +
+  '.tar.gz'
+}}"
+
+jdbc_plugin_signature_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/jdbc/' +
+  jdbc_plugin_version +
+  '/java-plugin-jdbc-storage-' +
+  jdbc_plugin_version +
+  '.tar.gz.asc'
+}}"
