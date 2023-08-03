@@ -85,8 +85,8 @@
     -Didp.target.dir=/opt/shibboleth-idp
     -Didp.host.name={{ idp_fqdn }}
     -Didp.scope={{ scope }}
-    -Didp.keystore.password={{ keystore_password }}
-    -Didp.sealer.password={{ sealer_password }}
+    -Didp.keystore.password={{ keystore_password | quote }}
+    -Didp.sealer.password={{ sealer_password | quote }}
     -Didp.merge.properties=/opt/shibboleth-idp/idp.merge.properties
     >> {{ idp_ansible_indicator }}
   # Create a hidden file to be idempotent.
