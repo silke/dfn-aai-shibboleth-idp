@@ -1,3 +1,8 @@
+- name: install mariadb-dependecies
+  ansible.builtin.apt:
+    name: ['mariadb-client', 'libmariadb-java', 'python3-pymysql']
+    state: present
+
 - ansible.builtin.import_tasks: 10-01-install-database-server.yml
   tags: install-database-server
   when: idp_local_db
@@ -5,11 +10,6 @@
 - ansible.builtin.import_tasks: 10-02-use-external-database.yml
   tags: install-database-dependecies
   when: not idp_local_db
-
-- name: install mariadb-dependecies
-  ansible.builtin.apt:
-    name: ['mariadb-client', 'libmariadb-java', 'python3-pymysql']
-    state: present
 
 - name: create symlink for tomcat
   ansible.builtin.file:
