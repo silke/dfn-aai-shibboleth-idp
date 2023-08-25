@@ -14,25 +14,25 @@
 - name: save user consent for attribute release in database I
   ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/idp.properties
-    regexp: "idp.consent.attribute-release.userStorageKey"
+    regexp: "idp.consent.attribute-release.userStorageKey ="
     line: idp.consent.attribute-release.userStorageKey = shibboleth.consent.PrincipalConsentStorageKey
 
 - name: save user consent for attribute release in database II
   ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/idp.properties
-    regexp: "idp.consent.attribute-release.userStorageKeyAttribute"
+    regexp: "idp.consent.attribute-release.userStorageKeyAttribute ="
     line: idp.consent.attribute-release.userStorageKeyAttribute = %{idp.persistentId.sourceAttribute}
 
 - name: save user consent for terms of use in database I
   ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/idp.properties
-    regexp: "idp.consent.terms-of-use.userStorageKey"
+    regexp: "idp.consent.terms-of-use.userStorageKey ="
     line: idp.consent.terms-of-use.userStorageKey = shibboleth.consent.PrincipalConsentStorageKey
 
 - name: save user consent for terms of use in database II
   ansible.builtin.lineinfile:
     path: /opt/shibboleth-idp/conf/idp.properties
-    regexp: "idp.consent.terms-of-use.userStorageKeyAttribute"
+    regexp: "idp.consent.terms-of-use.userStorageKeyAttribute ="
     line: idp.consent.terms-of-use.userStorageKeyAttribute = %{idp.persistentId.sourceAttribute}
 
 - name: users have to consent for each SP
