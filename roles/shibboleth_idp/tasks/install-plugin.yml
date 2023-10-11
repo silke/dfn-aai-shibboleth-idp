@@ -1,0 +1,50 @@
+---
+- name: install the plugin
+  block:
+
+    - name: check if the {{ plugin.name }} plugin is installed
+      ansible.builtin.shell: "/opt/shibboleth-idp/bin/plugin.sh -l | grep '^Plugin: {{ plugin.name }}[[:space:]]*Current Version: {{ plugin.version }}'"
+      register: idp_plugin_status
+      failed_when: idp_plugin_status.rc != 0
+      changed_when: False
+
+    - name: debug
+      debug:
+        msg: idp_plugin_status.rc
+
+  rescue:
+
+  - name: download the plugin
+    ansible.builtin.get_url:
+      url: "{{ item }}"
+      dest: /opt/install
+      force: false
+    loop:
+      - "{{ plugin.archive }}"
+      - "{{ plugin.signature }}"
+
+  - name: verify the download
+    ansible.builtin.command: >
+      gpg
+      --verify
+      {{ plugin.base }}.tar.gz.asc
+      {{ plugin.base }}.tar.gz
+    args:
+      chdir: /opt/install
+    register: verified_plugin_download
+    changed_when: false
+
+  - name: extract the archive if verified
+    ansible.builtin.unarchive:
+      src: "/opt/install/{{ plugin.base }}.tar.gz"
+      dest: /opt/install
+      remote_src: true
+    when: verified_plugin_download is succeeded
+
+  - name: install the plugin
+    ansible.builtin.shell: "/opt/shibboleth-idp/bin/plugin.sh --truststore {{ plugin.pgp_key }} -i {{ plugin.base }}.tar.gz"
+    args:
+      chdir: /opt/install
+    register: plugin_installed
+    #failed_when: "'[FAILED]' in idp_fudiscr_plugin_installed.stdout"
+
