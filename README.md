@@ -1,3 +1,5 @@
+# This is just a fork of [this original repository](https://jugit.fz-juelich.de/dfn/dfn-aai-shibboleth-idp) for private testing purposes! It is not maintained and there is no support for questions concerning Shibboleth IdP or DFN-AAI.
+
 # How to use this repo to install a Shibboleth Identity Provider
 
 ## USE AT YOUR OWN RISK!!!
