@@ -1,12 +1,12 @@
 ---
 - name: install required packages
   ansible.builtin.apt:
-    name: ['systemd-timesyncd', 'openjdk-11-jdk-headless', 'tomcat9', 'libtaglibs-standard-impl-java']
+    name: ['systemd-timesyncd', 'openjdk-17-jdk-headless', 'tomcat10', 'libtaglibs-standard-impl-java']
     state: present
 
 - name: give tomcat enough memory
   ansible.builtin.lineinfile:
-    path: /etc/default/tomcat9
+    path: /etc/default/tomcat10
     regexp: '^JAVA_OPTS'
     line: 'JAVA_OPTS="-Djava.awt.headless=true -Xms1024m -Xmx2048m"'
 
@@ -25,7 +25,7 @@
 # The target directories have to exist before the override is created.
 - name: add systemd subdirectory
   ansible.builtin.file:
-    path: /etc/systemd/system/tomcat9.service.d
+    path: /etc/systemd/system/tomcat10.service.d
     state: directory
     owner: root
     group: root
@@ -50,7 +50,7 @@
 
 - name: make logs and metadata directories read-writeable
   ansible.builtin.blockinfile:
-    path: /etc/systemd/system/tomcat9.service.d/override.conf
+    path: /etc/systemd/system/tomcat10.service.d/override.conf
     create: true
     block: |
       [Service]
@@ -61,17 +61,17 @@
     mode: 0644
   notify: daemon-reload
 
-- name: template for /etc/tomcat9/server.xml
+- name: template for /etc/tomcat10/server.xml
   ansible.builtin.template:
-    src: templates/etc/tomcat9/server.xml.j2
-    dest: /etc/tomcat9/server.xml
+    src: templates/etc/tomcat10/server.xml.j2
+    dest: /etc/tomcat10/server.xml
     owner: root
     group: tomcat
     mode: 0640
 
 - name: disable session persistence across tomcat restarts
   ansible.builtin.blockinfile:
-    path: /etc/tomcat9/context.xml
+    path: /etc/tomcat10/context.xml
     block: |
       <!-- Uncomment this to disable session persistence across Tomcat restarts -->
       <Manager pathname="" />
@@ -79,19 +79,19 @@
 
 - name: append path to JSTL path to common loader
   ansible.builtin.lineinfile:
-    path: /etc/tomcat9/catalina.properties
+    path: /etc/tomcat10/catalina.properties
     regexp: '^common.loader='
     line: 'common.loader="${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar","/usr/share/java/*.jar"'
 
 - name: directory for servlet config must exist
   ansible.builtin.file:
-    path: /etc/tomcat9/Catalina/localhost
+    path: /etc/tomcat10/Catalina/localhost
     state: directory
 
 - name: prepare configuration for IdP servlet
   ansible.builtin.template:
-    src: templates/etc/tomcat9/Catalina/localhost/idp.xml.j2
-    dest: /etc/tomcat9/Catalina/localhost/idp.xml
+    src: templates/etc/tomcat10/Catalina/localhost/idp.xml.j2
+    dest: /etc/tomcat10/Catalina/localhost/idp.xml
     owner: root
     group: tomcat
     mode: 0644
