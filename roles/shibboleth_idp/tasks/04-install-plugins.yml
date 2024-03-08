@@ -1,0 +1,63 @@
+---
+- name: install the jdbc plugin
+  loop:
+    - name: net.shibboleth.plugin.storage.jdbc
+      archive: "{{ jdbc_plugin_archive_url }}"
+      signature: "{{ jdbc_plugin_signature_url }}"
+      version: "{{ jdbc_plugin_version }}"
+      base: "java-plugin-jdbc-storage-{{ jdbc_plugin_version }}"
+      pgp_key: "/opt/install/PGP_KEYS"
+  loop_control:
+    loop_var: plugin
+  ansible.builtin.include_tasks: "install-plugin.yml"
+
+- name: install the nashorn plugin
+  loop:
+    - name: net.shibboleth.idp.plugin.nashorn
+      archive: "{{ nashorn_plugin_archive_url }}"
+      signature: "{{ nashorn_plugin_signature_url }}"
+      version: "{{ nashorn_plugin_version }}"
+      base: "idp-plugin-nashorn-jdk-dist-{{ nashorn_plugin_version }}"
+      pgp_key: "/opt/install/PGP_KEYS"
+  loop_control:
+    loop_var: plugin
+  ansible.builtin.include_tasks: "install-plugin.yml"
+
+- name: install the OIDC Common plugin
+  loop:
+    - name: net.shibboleth.oidc.common
+      archive: "{{ oidccommon_plugin_archive_url }}"
+      signature: "{{ oidccommon_plugin_signature_url }}"
+      version: "{{ oidccommon_plugin_version }}"
+      base: "oidc-common-dist-{{ oidccommon_plugin_version }}"
+      pgp_key: "/opt/install/PGP_KEYS"
+  loop_control:
+    loop_var: plugin
+  when: oidc
+  ansible.builtin.include_tasks: "install-plugin.yml"
+
+- name: install the OIDC Config plugin
+  loop:
+    - name: net.shibboleth.idp.plugin.oidc.config
+      archive: "{{ oidcconfig_plugin_archive_url }}"
+      signature: "{{ oidcconfig_plugin_signature_url }}"
+      version: "{{ oidcconfig_plugin_version }}"
+      base: "idp-plugin-oidc-config-dist-{{ oidcconfig_plugin_version }}"
+      pgp_key: "/opt/install/PGP_KEYS"
+  loop_control:
+    loop_var: plugin
+  when: oidc
+  ansible.builtin.include_tasks: "install-plugin.yml"
+
+- name: install the OIDC OP plugin
+  loop:
+    - name: net.shibboleth.idp.plugin.oidc.op
+      archive: "{{ oidcop_plugin_archive_url }}"
+      signature: "{{ oidcop_plugin_signature_url }}"
+      version: "{{ oidcop_plugin_version }}"
+      base: "idp-plugin-oidc-op-distribution-{{ oidcop_plugin_version }}"
+      pgp_key: "/opt/install/PGP_KEYS"
+  loop_control:
+    loop_var: plugin
+  when: oidc
+  ansible.builtin.include_tasks: "install-plugin.yml"

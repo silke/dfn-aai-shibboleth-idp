@@ -9,40 +9,43 @@
 - ansible.builtin.import_tasks: 03-install-idp.yml
   tags: install-idp
 
-- ansible.builtin.import_tasks: 04-config-access.yml
+- ansible.builtin.import_tasks: 04-install-plugins.yml
+  tags: install-plugins
+
+- ansible.builtin.import_tasks: 05-config-access.yml
   tags: config-access
 
-- ansible.builtin.import_tasks: 05-config-federation-metadata.yml
+- ansible.builtin.import_tasks: 06-config-federation-metadata.yml
   tags: config-federation-metadata
 
-- ansible.builtin.import_tasks: 06-config-logging.yml
+- ansible.builtin.import_tasks: 07-config-logging.yml
   tags: config-logging
 
-- ansible.builtin.import_tasks: 07-config-ldap.yml
+- ansible.builtin.import_tasks: 08-config-ldap.yml
   tags: config-ldap
 
-- ansible.builtin.import_tasks: 08-config-i18n.yml
+- ansible.builtin.import_tasks: 09-config-i18n.yml
   tags: config-i18n
 
-- ansible.builtin.import_tasks: 09-config-tou-consent.yml
+- ansible.builtin.import_tasks: 10-config-tou-consent.yml
   tags: config-tou-consent
 
-- ansible.builtin.import_tasks: 10-config-database.yml
+- ansible.builtin.import_tasks: 13-config-database.yml
   tags: config-database
 
-- ansible.builtin.import_tasks: 11-config-attributes.yml
+- ansible.builtin.import_tasks: 14-config-attributes.yml
   tags: config-attributes
 
-- ansible.builtin.import_tasks: 12-config-pid.yml
+- ansible.builtin.import_tasks: 15-config-pid.yml
   tags: config-pid
 
-- ansible.builtin.import_tasks: 13-config-sessions-consent.yml
+- ansible.builtin.import_tasks: 16-config-sessions-consent.yml
   tags: config-sessions-consent
 
-- ansible.builtin.import_tasks: 14-config-slo.yml
+- ansible.builtin.import_tasks: 17-config-slo.yml
   tags: config-slo
 
-- ansible.builtin.import_tasks: 15-config-logo.yml
+- ansible.builtin.import_tasks: 18-config-logo.yml
   tags: config-logo
 
 - ansible.builtin.import_tasks: 20-config-fail2ban.yml

@@ -45,6 +45,8 @@ idp_keys_url: "{{
   'https://shibboleth.net/downloads/PGP_KEYS'
 }}"
 
+### Plugins ###
+### JBDC
 jdbc_plugin_archive_url: "{{
   'https://shibboleth.net/downloads/identity-provider/plugins/jdbc/' +
   jdbc_plugin_version +
@@ -58,5 +60,73 @@ jdbc_plugin_signature_url: "{{
   jdbc_plugin_version +
   '/java-plugin-jdbc-storage-' +
   jdbc_plugin_version +
+  '.tar.gz.asc'
+}}"
+
+### Nashorn Scripting Engine
+nashorn_plugin_archive_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/scripting/' +
+  nashorn_plugin_version +
+  '/idp-plugin-nashorn-jdk-dist-' +
+  nashorn_plugin_version +
+  '.tar.gz'
+}}"
+
+nashorn_plugin_signature_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/scripting/' +
+  nashorn_plugin_version +
+  '/idp-plugin-nashorn-jdk-dist-' +
+  nashorn_plugin_version +
+  '.tar.gz.asc'
+}}"
+
+### OIDC OP
+oidcop_plugin_archive_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/oidc-op/' +
+  oidcop_plugin_version +
+  '/idp-plugin-oidc-op-distribution-' +
+  oidcop_plugin_version +
+  '.tar.gz'
+}}"
+
+oidcop_plugin_signature_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/oidc-op/' +
+  oidcop_plugin_version +
+  '/idp-plugin-oidc-op-distribution-' +
+  oidcop_plugin_version +
+  '.tar.gz.asc'
+}}"
+
+### OIDC Common
+oidccommon_plugin_archive_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/oidc-common/' +
+  oidccommon_plugin_version +
+  '/oidc-common-dist-' +
+  oidccommon_plugin_version +
+  '.tar.gz'
+}}"
+
+oidccommon_plugin_signature_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/oidc-common/' +
+  oidccommon_plugin_version +
+  '/oidc-common-dist-' +
+  oidccommon_plugin_version +
+  '.tar.gz.asc'
+}}"
+
+### OIDC Config
+oidcconfig_plugin_archive_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/oidc-config/' +
+  oidcconfig_plugin_version +
+  '/idp-plugin-oidc-config-dist-' +
+  oidcconfig_plugin_version +
+  '.tar.gz'
+}}"
+
+oidcconfig_plugin_signature_url: "{{
+  'https://shibboleth.net/downloads/identity-provider/plugins/oidc-config/' +
+  oidcconfig_plugin_version +
+  '/idp-plugin-oidc-config-dist-' +
+  oidcconfig_plugin_version +
   '.tar.gz.asc'
 }}"
