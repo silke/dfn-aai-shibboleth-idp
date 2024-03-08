@@ -1,6 +1,9 @@
 # {{ ansible_managed }}
 idp.noprompt = yes
-idp.scope = {{ scope }}
+idp.target.dir = /opt/shibboleth-idp
+idp.host.name = {{ idp_fqdn }}
 idp.entityID = {{ entity_id }}
+idp.scope = {{ scope }}
 sealer.password = {{ sealer_password }}
-keystore.password = {{ keystore_password }}
+keystore.password = {{ keystore_password }} 
+idp.LDAP.credential = {{ vault_ldap_bindpw }}

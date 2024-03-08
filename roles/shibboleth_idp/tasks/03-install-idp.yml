@@ -78,16 +78,7 @@
   ansible.builtin.shell: >
     JAVA_HOME=/usr
     {{ idp_installation_script }}
-    {{
-      '-Didp.src.dir=' +
-      idp_src_dir
-    }}
-    -Didp.target.dir=/opt/shibboleth-idp
-    -Didp.host.name={{ idp_fqdn }}
-    -Didp.scope={{ scope }}
-    -Didp.keystore.password={{ keystore_password | quote }}
-    -Didp.sealer.password={{ sealer_password | quote }}
-    -Didp.merge.properties=/opt/shibboleth-idp/idp.merge.properties
+    --propertyFile /opt/shibboleth-idp/idp.merge.properties
     >> {{ idp_ansible_indicator }}
   # Create a hidden file to be idempotent.
   # To force a reinstallation remove this file, too.
