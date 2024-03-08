@@ -4,3 +4,6 @@ credentials/*
 # Ignore certificates and csrs
 *.crt.pem
 *.csr
+vault-password.txt
+favicon.ico
+logo.png
